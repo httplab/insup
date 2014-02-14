@@ -4,30 +4,33 @@ require 'colorize'
 namespace :rad do
 
   task :list_changes do |t|
-    Rad::GitTracker.instance.get_changed_files.each do |x|
-      puts x.path
-    end
-  end
-
-  task :git_status do |t|
-    Rad::GitTracker.instance.status.each do |x|
+    Rad.list_changes.each do |x|
       case x.state
-      when Rad::GitTracker::GitFile::ADDED
+      when Rad::TrackedFile::NEW
         puts x.path.green
-      when Rad::GitTracker::GitFile::MODIFIED
+      when Rad::TrackedFile::MODIFIED
         puts x.path.yellow
-      when Rad::GitTracker::GitFile::DELETED
+      when Rad::TrackedFile::DELETED
         puts x.path.red
-      when Rad::GitTracker::GitFile::UNTRACKED
-        puts x.path.light_white
       end
     end
   end
 
-  task :track_list do |t|
-    Rad::Settings.instance.get_tracked_locations.each do |x|
-      puts x
+  task :tracked_locations do |t|
+    Rad::Settings.instance.get_tracked_locations.each do |tl|
+      puts tl
     end
+  end
+
+  task :config do |t|
+    puts 'Tracked locations:'
+
+    Rad::Settings.instance.get_tracked_locations.each do |tl|
+      puts tl
+    end
+
+    puts "Tracker #{Rad::Settings.instance.tracker['class']}"
+    puts "Uploader #{Rad::Settings.instance.uploader['class']}"
   end
 
 end

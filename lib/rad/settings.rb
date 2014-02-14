@@ -11,7 +11,16 @@ class Rad::Settings
 
 
   def get_tracked_locations
-    return @settings['track']
+    return @settings['track'] || []
+  end
+
+
+  def uploader
+    return @settings['uploader']
+  end
+
+  def tracker
+    return @settings['tracker']
   end
 
 end
