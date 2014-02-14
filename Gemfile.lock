@@ -1,20 +1,26 @@
+GIT
+  remote: git@github.com:schacon/ruby-git.git
+  revision: 41d9e3e4958b491a9595d7c216ba4278246bde5f
+  branch: master
+  specs:
+    git (1.2.6)
+
 GEM
   remote: https://rubygems.org/
   specs:
-    diff-lcs (1.2.5)
-    fssm (0.2.10)
-    grit (2.5.0)
-      diff-lcs (~> 1.1)
-      mime-types (~> 1.15)
-      posix-spawn (~> 0.3.6)
-    mime-types (1.25.1)
-    posix-spawn (0.3.8)
+    awesome_print (1.2.0)
+    colorize (0.6.0)
+    mime-types (2.1)
     rake (10.1.1)
+    rest-client (1.6.7)
+      mime-types (>= 1.16)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  fssm
-  grit
+  awesome_print
+  colorize
+  git!
   rake
+  rest-client

@@ -1,5 +1,8 @@
 source 'https://rubygems.org'
 
-gem 'grit'
+gem 'git', git: 'git@github.com:schacon/ruby-git.git', branch: 'master'
+#gem 'git'
 gem 'rake'
-gem 'fssm'
+gem 'rest-client'
+gem 'awesome_print'
+gem 'colorize'
