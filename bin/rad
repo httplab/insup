@@ -1,14 +1,13 @@
-#!/usr/bin/ruby
-
-require 'rubygems'
+#!/usr/bin/env ruby
 
 require 'trollop'
 
-require_relative 'lib/rad.rb'
+require_relative '../lib/rad.rb'
 
 SUB_COMMANDS = %w(list_changes config tracked_locations upload_all)
 
 global_opts = Trollop::options do
+  version "rad 0.1 (c) 2014 nu-hin@httplab.ru"
   banner <<-EOS
 Usage:
        rad list_changes
@@ -20,6 +19,10 @@ EOS
 end
 
 cmd = ARGV.shift
+
+if cmd.nil?
+  raise Trollop::HelpNeeded
+end
 
 if(!SUB_COMMANDS.include? cmd)
   Trollop::die "unknown subcommand #{cmd.inspect}"
