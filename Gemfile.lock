@@ -14,6 +14,7 @@ GEM
     rake (10.1.1)
     rest-client (1.6.7)
       mime-types (>= 1.16)
+    trollop (2.0)
 
 PLATFORMS
   ruby
@@ -24,3 +25,4 @@ DEPENDENCIES
   git!
   rake
   rest-client
+  trollop

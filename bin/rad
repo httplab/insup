@@ -1,0 +1,39 @@
+#!/usr/bin/ruby
+
+require 'rubygems'
+
+require 'trollop'
+
+require_relative 'lib/rad.rb'
+
+SUB_COMMANDS = %w(list_changes config tracked_locations upload_all)
+
+global_opts = Trollop::options do
+  banner <<-EOS
+Usage:
+       rad list_changes
+       rad config
+       rad tracked_locations
+       rad upload_all
+EOS
+  stop_on SUB_COMMANDS
+end
+
+cmd = ARGV.shift
+
+if(!SUB_COMMANDS.include? cmd)
+  Trollop::die "unknown subcommand #{cmd.inspect}"
+end
+
+case cmd
+when 'list_changes'
+  Rad.list_changes
+when 'config'
+  Rad.config
+when 'tracked_locations'
+  Rad::Settings.instance.get_tracked_locations.each do |tl|
+      puts tl
+  end
+when 'upload_all'
+  Rad.upload_all
+end

@@ -1,3 +1,5 @@
+require 'colorize'
+
 module Rad
 
   def self.get_uploader
@@ -16,9 +18,43 @@ module Rad
     end
   end
 
-  def self.list_changes
+  def self.get_changes
     tracker = get_tracker
     tracker.get_changes
+  end
+
+  def self.upload_file file
+
+  end
+
+  def self.upload_all
+    uploader = get_uploader
+    changed_files = get_changes
+    uploader.upload_all changed_files
+  end
+
+  def self.list_changes
+    get_changes.each do |x|
+      case x.state
+      when Rad::TrackedFile::NEW
+        puts x.path.green
+      when Rad::TrackedFile::MODIFIED
+        puts x.path.yellow
+      when Rad::TrackedFile::DELETED
+        puts x.path.red
+      end
+    end
+  end
+
+  def config
+    puts 'Tracked locations:'
+
+    Rad::Settings.instance.get_tracked_locations.each do |tl|
+      puts tl
+    end
+
+    puts "Tracker #{Rad::Settings.instance.tracker['class']}"
+    puts "Uploader #{Rad::Settings.instance.uploader['class']}"
   end
 
 end
