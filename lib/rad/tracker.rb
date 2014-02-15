@@ -1,7 +1,13 @@
 class Rad::Tracker
 
-  def initialize path = nil
-    @path = path || Dir.pwd
+  def initialize config = nil
+    @config = config
+
+    if config.present?
+      @path = config[:path]
+    end
+
+    @path ||= Dir.pwd
   end
 
   def tracked_locations

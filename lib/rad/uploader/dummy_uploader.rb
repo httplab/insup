@@ -1,19 +1,19 @@
+require('colorize')
+
 class Rad::Uploader::DummyUploader < Rad::Uploader
 
-  def upload_all files
-    puts '---->Dummy Uploader<-----'
-    files.each do |x|
-      case x.state
-      when Rad::TrackedFile::NEW, Rad::TrackedFile::MODIFIED
-        puts "Uploading #{x.path}... Done.".green
-      when Rad::TrackedFile::DELETED
-        puts "Deleting #{x.path}... Done.".red
-      end
-    end
+  def upload_new_file file
+    puts "Creating file #{file.path}...".green
   end
 
-  def upload_one file
 
+  def upload_modified_file file
+    puts "Uploading file #{file.path}...".yellow
+  end
+
+
+  def remove_file file
+    puts "Deleting file #{file.path}...".red
   end
 
 end

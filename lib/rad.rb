@@ -4,17 +4,17 @@ module Rad
 
   def self.get_uploader
     if uploader_conf = Settings.instance.uploader
-      Object::const_get(uploader_conf['class']).new
+      Object::const_get(uploader_conf['class']).new uploader_conf
     else
-      Uploader::Dummy.new
+      Uploader::Dummy.new uploader_conf
     end
   end
 
   def self.get_tracker
     if tracker_conf = Settings.instance.tracker
-      Object::const_get(tracker_conf['class']).new
+      Object::const_get(tracker_conf['class']).new tracker_conf
     else
-      Tracker::SimpleTracker.new
+      Tracker::SimpleTracker.new tracker_conf
     end
   end
 

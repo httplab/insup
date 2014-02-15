@@ -4,11 +4,12 @@ require 'yaml'
 class Rad::Settings
   include Singleton
 
+  attr_reader :settings
+
   def initialize
     radfile = IO.read('.rad')
     @settings = YAML.load(radfile)
   end
-
 
   def get_tracked_locations
     return @settings['track'] || []

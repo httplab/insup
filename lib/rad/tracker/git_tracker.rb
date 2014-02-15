@@ -3,7 +3,7 @@ require 'git'
 # Git tracker: tracks files by evaluating changes in Git repo
 class Rad::Tracker::GitTracker < Rad::Tracker
 
-  def initialize path = nil
+  def initialize config = nil
     super
     @git = Git.open(@path)
   end
