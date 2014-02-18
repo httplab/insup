@@ -1,4 +1,13 @@
 GIT
+  remote: git@github.com:httpLab/insales_api.git
+  revision: 024605e26ab39f6ddd50c58385421d7f2b91ac20
+  branch: master
+  specs:
+    insales_api (0.1.0.pre)
+      activeresource (>= 3.0.0)
+      activesupport (>= 3.0.0)
+
+GIT
   remote: git@github.com:schacon/ruby-git.git
   revision: 41d9e3e4958b491a9595d7c216ba4278246bde5f
   branch: master
@@ -8,13 +17,36 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
+    activemodel (4.0.2)
+      activesupport (= 4.0.2)
+      builder (~> 3.1.0)
+    activeresource (4.0.0)
+      activemodel (~> 4.0)
+      activesupport (~> 4.0)
+      rails-observers (~> 0.1.1)
+    activesupport (4.0.2)
+      i18n (~> 0.6, >= 0.6.4)
+      minitest (~> 4.2)
+      multi_json (~> 1.3)
+      thread_safe (~> 0.1)
+      tzinfo (~> 0.3.37)
+    atomic (1.1.14)
     awesome_print (1.2.0)
+    builder (3.1.4)
     colorize (0.6.0)
+    i18n (0.6.9)
     mime-types (2.1)
+    minitest (4.7.5)
+    multi_json (1.8.4)
+    rails-observers (0.1.2)
+      activemodel (~> 4.0)
     rake (10.1.1)
     rest-client (1.6.7)
       mime-types (>= 1.16)
+    thread_safe (0.1.3)
+      atomic
     trollop (2.0)
+    tzinfo (0.3.38)
 
 PLATFORMS
   ruby
@@ -23,6 +55,7 @@ DEPENDENCIES
   awesome_print
   colorize
   git!
+  insales_api!
   rake
   rest-client
   trollop

@@ -30,7 +30,7 @@ module Rad
   def self.upload_all
     uploader = get_uploader
     changed_files = get_changes
-    uploader.upload_all changed_files
+    uploader.process_all changed_files
   end
 
   def self.list_changes
@@ -67,3 +67,4 @@ require_relative 'rad/tracker/git_tracker.rb'
 require_relative 'rad/tracker/simple_tracker.rb'
 require_relative 'rad/uploader.rb'
 require_relative 'rad/uploader/dummy_uploader.rb'
+require_relative 'rad/uploader/insales_uploader.rb'
