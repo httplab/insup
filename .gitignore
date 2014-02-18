@@ -1,4 +1,5 @@
 vendor/bundle
 .bundle
 .irb-history
+.rad
 log

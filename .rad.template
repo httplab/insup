@@ -1,0 +1,12 @@
+track:
+  - media
+
+tracker:
+  class: Rad::Tracker::GitTracker
+
+uploader:
+  class: Rad::Uploader::InsalesUploader
+  subdomain:
+  password:
+  api_key:
+
