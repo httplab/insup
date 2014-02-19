@@ -12,12 +12,12 @@ class Rad::Uploader
   def process_all files
     files.each do |file|
       case file.state
-      when Rad::TrackedFile.NEW
+      when Rad::TrackedFile::NEW
         upload_new_file file
-      when Rad::TrackedFile::MODIFY
+      when Rad::TrackedFile::MODIFIED
         upload_modified_file file
       when Rad::TrackedFile::DELETED
-        delete_file file
+        remove_file file
       end
     end
   end

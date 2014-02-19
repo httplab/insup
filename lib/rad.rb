@@ -10,6 +10,7 @@ module Rad
     end
   end
 
+
   def self.get_tracker
     if tracker_conf = Settings.instance.tracker
       Object::const_get(tracker_conf['class']).new tracker_conf
@@ -18,35 +19,49 @@ module Rad
     end
   end
 
-  def self.get_changes
+
+  def self.tracked_files
     tracker = get_tracker
-    tracker.get_changes
+    tracker.tracked_files
   end
 
-  def self.upload_file file
 
+  def self.get_changes
+    begin
+      tracker = get_tracker
+      tracker.get_changes
+    rescue => ex
+      puts ex
+    end
   end
 
-  def self.upload_all
-    uploader = get_uploader
-    changed_files = get_changes
-    uploader.process_all changed_files
+
+  def self.upload_changes
+    begin
+      uploader = get_uploader
+      changed_files = get_changes
+      uploader.process_all changed_files
+    rescue => ex
+      puts ex
+    end
   end
+
 
   def self.list_changes
     get_changes.each do |x|
       case x.state
       when Rad::TrackedFile::NEW
-        puts x.path.green
+        puts "New:      #{x.path}".green
       when Rad::TrackedFile::MODIFIED
-        puts x.path.yellow
+        puts "Modified: #{x.path}".yellow
       when Rad::TrackedFile::DELETED
-        puts x.path.red
+        puts "Deleted:  #{x.path}".red
       end
     end
   end
 
-  def config
+
+  def self.print_config
     puts 'Tracked locations:'
 
     Rad::Settings.instance.get_tracked_locations.each do |tl|

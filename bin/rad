@@ -1,10 +1,15 @@
 #!/usr/bin/env ruby
 
+require 'rubygems'
+# Set up gems listed in the Gemfile.
+ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../Gemfile', __FILE__)
+require 'bundler/setup' if File.exists?(ENV['BUNDLE_GEMFILE'])
+
 require 'trollop'
 
 require_relative '../lib/rad.rb'
 
-SUB_COMMANDS = %w(list_changes config tracked_locations upload_all)
+SUB_COMMANDS = %w(status config commit tracked_locations list-files)
 
 global_opts = Trollop::options do
   version "rad 0.1 (c) 2014 nu-hin@httplab.ru"
@@ -29,14 +34,20 @@ if(!SUB_COMMANDS.include? cmd)
 end
 
 case cmd
-when 'list_changes'
+when 'status'
   Rad.list_changes
 when 'config'
-  Rad.config
+  Rad.print_config
 when 'tracked_locations'
   Rad::Settings.instance.get_tracked_locations.each do |tl|
       puts tl
   end
 when 'upload_all'
   Rad.upload_all
+when 'list-files'
+  Rad.tracked_files.each do |f|
+    puts f
+  end
+when 'commit'
+  Rad.upload_changes
 end

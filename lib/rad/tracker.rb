@@ -14,4 +14,36 @@ class Rad::Tracker
     track = ::Rad::Settings.instance.get_tracked_locations
   end
 
+  def tracked_files
+    track = tracked_locations
+
+    res = []
+
+    Dir.chdir(@path) do
+
+      track.each do |loc|
+        res << (get_files loc)
+      end
+
+    end
+
+    res.flatten
+  end
+
+  private
+
+  def get_files path
+    if File.directory? path
+      res = []
+
+      Dir.foreach(path) do |entry|
+        next if ['..','.'].include? entry
+        res << (get_files "#{path}/#{entry}")
+      end
+
+      res.flatten
+    else
+      [path]
+    end
+  end
 end
