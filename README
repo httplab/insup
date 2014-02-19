@@ -1,0 +1,17 @@
+### Installation:
+
+1. Clone this GIT repository into local folder.
+2. Go to the directory with your files
+3. Execute `cp <path_to_rad_repo>/.rad.template .rad`
+4. Modify .rad file in your directory
+
+
+### Usage:
+
+* `rad config` --- print current configuration
+* `rad list-files` --- list all tracked files according to the selected tracker
+* `rad status` --- list all changes to be commited accroding to the selected tracker
+* `rad commit` --- apply all changes to the remote storage
+
+
+
