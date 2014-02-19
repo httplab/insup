@@ -1,5 +1,7 @@
 track:
   - media
+  - snippets
+  - templates
 
 tracker:
   class: Rad::Tracker::GitTracker
@@ -9,4 +11,5 @@ uploader:
   subdomain:
   password:
   api_key:
+  theme_id:
 

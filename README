@@ -1,12 +1,16 @@
 ### Installation:
 
-1. Clone this GIT repository into local folder.
+1. Clone this GIT repository into local folder
 2. Go to the directory with your files
 3. Execute `cp <path_to_rad_repo>/.rad.template .rad`
 4. Modify .rad file in your directory
 
 
 ### Usage:
+
+You should either add `<path_to_rad_repo>/bin` to your `$PATH` variable or execute `<path_to_rad_repo>/bin/rad <command>` each time.
+
+There are currently following commands implemented:
 
 * `rad config` --- print current configuration
 * `rad list-files` --- list all tracked files according to the selected tracker
