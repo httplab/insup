@@ -1,9 +1,11 @@
 ### Installation:
 
 1. Clone this GIT repository into local folder
-2. Go to the directory with your files
-3. Execute `cp <path_to_rad_repo>/.rad.template .rad`
-4. Modify .rad file in your directory
+2. Go to the cloned repository
+3. Execute `bundle install --path vendor/bundle`
+4. Go to the directory with your files
+5. Execute `cp <path_to_rad_repo>/.rad.template .rad`
+6. Modify .rad file in your directory
 
 
 ### Usage:

@@ -9,16 +9,17 @@ require 'trollop'
 
 require_relative '../lib/rad.rb'
 
-SUB_COMMANDS = %w(status config commit tracked_locations list-files)
+SUB_COMMANDS = %w(status config commit tracked_locations list-files listen)
 
 global_opts = Trollop::options do
   version "rad 0.1 (c) 2014 nu-hin@httplab.ru"
   banner <<-EOS
 Usage:
-       rad list_changes
+       rad status
+       rad commit
        rad config
-       rad tracked_locations
-       rad upload_all
+       rad list-files
+       rad listen
 EOS
   stop_on SUB_COMMANDS
 end
@@ -44,12 +45,12 @@ when 'tracked_locations'
   Rad::Settings.instance.get_tracked_locations.each do |tl|
       puts tl
   end
-when 'upload_all'
-  Rad.upload_all
 when 'list-files'
   Rad.tracked_files.each do |f|
     puts f
   end
 when 'commit'
   Rad.upload_changes
+when 'listen'
+  Rad.listen
 end

@@ -10,9 +10,6 @@ class Rad::Tracker
     @path ||= Dir.pwd
   end
 
-  def tracked_locations
-    track = ::Rad::Settings.instance.get_tracked_locations
-  end
 
   def tracked_files
     track = tracked_locations
@@ -29,6 +26,14 @@ class Rad::Tracker
 
     res.flatten
   end
+
+
+  protected
+
+  def tracked_locations
+    track = ::Rad::Settings.instance.get_tracked_locations
+  end
+
 
   private
 

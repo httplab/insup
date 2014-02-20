@@ -1,4 +1,6 @@
 require 'colorize'
+require 'io/console'
+
 
 module Rad
 
@@ -36,10 +38,10 @@ module Rad
   end
 
 
-  def self.upload_changes
+  def self.upload_changes changed_files = nil
     begin
+      changed_files ||= get_changes
       uploader = get_uploader
-      changed_files = get_changes
       uploader.process_all changed_files
     rescue => ex
       puts ex
@@ -72,6 +74,30 @@ module Rad
     puts "Uploader #{Rad::Settings.instance.uploader['class']}"
   end
 
+
+  def self.listen
+    tracker = get_tracker
+    if tracker.respond_to? :listen
+      tracker.listen do |changes|
+        puts '------------------------------>'
+        upload_changes changes
+      end
+
+      exit_requested = false
+      Kernel.trap( "INT" ) { exit_requested = true }
+
+      while !exit_requested do
+        sleep 0.1
+      end
+
+      puts 'Stopping listener...'
+      tracker.stop
+      puts 'Terminated by user'
+    else
+      puts "#{tracker.class.name} does not support listening"
+    end
+  end
+
 end
 
 
@@ -80,6 +106,7 @@ require_relative 'rad/tracked_file.rb'
 require_relative 'rad/tracker.rb'
 require_relative 'rad/tracker/git_tracker.rb'
 require_relative 'rad/tracker/simple_tracker.rb'
+require_relative 'rad/tracker/listen_tracker.rb'
 require_relative 'rad/uploader.rb'
 require_relative 'rad/uploader/dummy_uploader.rb'
 require_relative 'rad/uploader/insales_uploader.rb'
