@@ -1,6 +1,6 @@
 require('colorize')
 
-class Rad::Uploader::DummyUploader < Rad::Uploader
+class Insup::Uploader::DummyUploader < Insup::Uploader
 
   def upload_new_file file
     puts "Creating file #{file.path}".green

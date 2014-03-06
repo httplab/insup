@@ -1,6 +1,6 @@
-require_relative ('lib/rad.rb')
+require_relative ('lib/insup.rb')
 require 'colorize'
 
-namespace :rad do
+namespace :insup do
 
 end

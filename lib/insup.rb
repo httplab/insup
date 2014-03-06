@@ -2,7 +2,9 @@ require 'colorize'
 require 'io/console'
 
 
-module Rad
+module Insup
+  VERSION = "0.1"
+
 
   def self.get_uploader
     if uploader_conf = Settings.instance.uploader
@@ -52,11 +54,11 @@ module Rad
   def self.list_changes
     get_changes.each do |x|
       case x.state
-      when Rad::TrackedFile::NEW
+      when Insup::TrackedFile::NEW
         puts "New:      #{x.path}".green
-      when Rad::TrackedFile::MODIFIED
+      when Insup::TrackedFile::MODIFIED
         puts "Modified: #{x.path}".yellow
-      when Rad::TrackedFile::DELETED
+      when Insup::TrackedFile::DELETED
         puts "Deleted:  #{x.path}".red
       end
     end
@@ -66,12 +68,12 @@ module Rad
   def self.print_config
     puts 'Tracked locations:'
 
-    Rad::Settings.instance.get_tracked_locations.each do |tl|
+    Insup::Settings.instance.get_tracked_locations.each do |tl|
       puts tl
     end
 
-    puts "Tracker #{Rad::Settings.instance.tracker['class']}"
-    puts "Uploader #{Rad::Settings.instance.uploader['class']}"
+    puts "Tracker #{Insup::Settings.instance.tracker['class']}"
+    puts "Uploader #{Insup::Settings.instance.uploader['class']}"
   end
 
 
@@ -80,7 +82,7 @@ module Rad
     if tracker.respond_to? :listen
       tracker.listen do |changes|
         puts '------------------------------>'
-        upload_changes changes
+        # upload_changes changes
       end
 
       exit_requested = false
@@ -101,12 +103,12 @@ module Rad
 end
 
 
-require_relative 'rad/settings.rb'
-require_relative 'rad/tracked_file.rb'
-require_relative 'rad/tracker.rb'
-require_relative 'rad/tracker/git_tracker.rb'
-require_relative 'rad/tracker/simple_tracker.rb'
-require_relative 'rad/tracker/listen_tracker.rb'
-require_relative 'rad/uploader.rb'
-require_relative 'rad/uploader/dummy_uploader.rb'
-require_relative 'rad/uploader/insales_uploader.rb'
+require_relative 'insup/settings.rb'
+require_relative 'insup/tracked_file.rb'
+require_relative 'insup/tracker.rb'
+require_relative 'insup/tracker/git_tracker.rb'
+require_relative 'insup/tracker/simple_tracker.rb'
+require_relative 'insup/tracker/listen_tracker.rb'
+require_relative 'insup/uploader.rb'
+require_relative 'insup/uploader/dummy_uploader.rb'
+require_relative 'insup/uploader/insales_uploader.rb'

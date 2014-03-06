@@ -1,15 +1,4 @@
 GIT
-  remote: git@github.com:guard/listen.git
-  revision: 0f16f471d5c3cf658ab47561359c0a5fdd7fd855
-  branch: master
-  specs:
-    listen (2.5.0)
-      celluloid (>= 0.15.2)
-      celluloid-io (>= 0.15.0)
-      rb-fsevent (>= 0.9.3)
-      rb-inotify (>= 0.9)
-
-GIT
   remote: git@github.com:httplab/insales_api.git
   revision: 024605e26ab39f6ddd50c58385421d7f2b91ac20
   branch: master
@@ -52,6 +41,11 @@ GEM
     colorize (0.6.0)
     ffi (1.9.3)
     i18n (0.6.9)
+    listen (2.5.0)
+      celluloid (>= 0.15.2)
+      celluloid-io (>= 0.15.0)
+      rb-fsevent (>= 0.9.3)
+      rb-inotify (>= 0.9)
     minitest (4.7.5)
     multi_json (1.8.4)
     nio4r (1.0.0)
@@ -75,6 +69,6 @@ DEPENDENCIES
   colorize
   git!
   insales_api!
-  listen!
+  listen
   rake
   trollop

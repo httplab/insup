@@ -2,25 +2,34 @@ require 'insales_api'
 require 'base64'
 
 
-class ActiveResource::Connection
-  # Creates new Net::HTTP instance for communication with
-  # remote service and resources.
-  def http
-    http = Net::HTTP.new(@site.host, @site.port)
-    # http.use_ssl = @site.is_a?(URI::HTTPS)
-    # http.verify_mode = OpenSSL::SSL::VERIFY_NONE if http.use_ssl
-    http.read_timeout = @timeout if @timeout
-    # Here's the addition that allows you to see the output
-    http.set_debug_output $stdout
-    return http
-  end
-end
+# class ActiveResource::Connection
+#   # Creates new Net::HTTP instance for communication with
+#   # remote service and resources.
+#   def http
+#     http = Net::HTTP.new(@site.host, @site.port)
+#     # http.use_ssl = @site.is_a?(URI::HTTPS)
+#     # http.verify_mode = OpenSSL::SSL::VERIFY_NONE if http.use_ssl
+#     http.read_timeout = @timeout if @timeout
+#     # Here's the addition that allows you to see the output
+#     http.set_debug_output $stdout
+#     return http
+#   end
+# end
 
 
 
-class Rad::Uploader::InsalesUploader < Rad::Uploader
+class Insup::Uploader::InsalesUploader < Insup::Uploader
 
   def upload_new_file file
+    asset = find_asset file
+
+    if !asset.nil?
+      upload_modified_file file
+      return
+    end
+
+    puts "Creating #{file.path}"
+
     configure_api
     asset_type = get_asset_type file.path
 
@@ -38,10 +47,11 @@ class Rad::Uploader::InsalesUploader < Rad::Uploader
     })
   end
 
-
   def upload_modified_file file
     configure_api
     asset = find_asset file
+
+    puts "Updating #{file.path}"
 
     if !asset
       raise "Cannot find remote counterpart for file #{file.path}"
@@ -63,7 +73,6 @@ class Rad::Uploader::InsalesUploader < Rad::Uploader
     end
   end
 
-
   def remove_file file
     configure_api
     asset = find_asset file
@@ -74,12 +83,11 @@ class Rad::Uploader::InsalesUploader < Rad::Uploader
     asset.destroy
   end
 
-
 private
   ASSET_TYPE_MAP = {
     'media/' => 'Asset::Media',
-    'snippets/' => 'Asset::Snippets',
-    'templates/' => 'Asset::Templates'
+    'snippets/' => 'Asset::Snippet',
+    'templates/' => 'Asset::Template'
   }.freeze
 
 
@@ -93,7 +101,7 @@ private
     assets = assets_list
 
     files = assets.select  do |el|
-      el.type == asset_type && el.name == file.file_name
+      el.type == asset_type && (el.human_readable_name == file.file_name || el.name == file.file_name)
     end
 
     if files && !files.empty?
@@ -102,7 +110,6 @@ private
       return nil
     end
   end
-
 
   def get_asset_type path
     res = nil
@@ -116,7 +123,6 @@ private
     return res
   end
 
-
   def configure_api
     if !@has_api
       active_resource_logger = Logger.new('log/active_resource.log', 'daily')
@@ -127,7 +133,6 @@ private
     end
   end
 
-
   def theme
     configure_api
     @theme ||= InsalesApi::Theme.find(@config['theme_id'])
@@ -136,8 +141,9 @@ private
   def assets_list
     configure_api
     @assets_list ||= theme.assets.to_a
+    # @assets_list.each {|x| puts x.inspect}
+    # @assets_list
   end
-
 
   def get_asset file
     configure_api

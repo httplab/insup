@@ -7,19 +7,19 @@ require 'bundler/setup' if File.exists?(ENV['BUNDLE_GEMFILE'])
 
 require 'trollop'
 
-require_relative '../lib/rad.rb'
+require_relative '../lib/insup.rb'
 
 SUB_COMMANDS = %w(status config commit tracked_locations list-files listen)
 
 global_opts = Trollop::options do
-  version "rad 0.1 (c) 2014 nu-hin@httplab.ru"
+  version "insup #{Insup::VERSION} (c) 2014 nuinuhin@gmail.com"
   banner <<-EOS
 Usage:
-       rad status
-       rad commit
-       rad config
-       rad list-files
-       rad listen
+       insup status
+       insup commit [file1, [file2, [...]]]
+       insup config
+       insup list-files
+       insup listen
 EOS
   stop_on SUB_COMMANDS
 end
@@ -38,19 +38,19 @@ Dir.mkdir('log') unless Dir.exist?('log')
 
 case cmd
 when 'status'
-  Rad.list_changes
+  Insup.list_changes
 when 'config'
-  Rad.print_config
+  Insup.print_config
 when 'tracked_locations'
-  Rad::Settings.instance.get_tracked_locations.each do |tl|
+  Insup::Settings.instance.get_tracked_locations.each do |tl|
       puts tl
   end
 when 'list-files'
-  Rad.tracked_files.each do |f|
+  Insup.tracked_files.each do |f|
     puts f
   end
 when 'commit'
-  Rad.upload_changes
+  Insup.upload_changes ARGV.map{|f| Insup::TrackedFile.new(f,Insup::TrackedFile::MODIFIED)}
 when 'listen'
-  Rad.listen
+  Insup.listen
 end

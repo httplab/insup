@@ -1,7 +1,7 @@
 require 'git'
 
 # Git tracker: tracks files by evaluating changes in Git repo
-class Rad::Tracker::GitTracker < Rad::Tracker
+class Insup::Tracker::GitTracker < Insup::Tracker
 
   def initialize config = nil
     super
@@ -18,9 +18,9 @@ class Rad::Tracker::GitTracker < Rad::Tracker
   private
 
   STATUS_MAP = {
-    'A' => Rad::TrackedFile::NEW,
-    'M' => Rad::TrackedFile::MODIFIED,
-    'D' => Rad::TrackedFile::DELETED
+    'A' => Insup::TrackedFile::NEW,
+    'M' => Insup::TrackedFile::MODIFIED,
+    'D' => Insup::TrackedFile::DELETED
   }
 
   def status
@@ -30,9 +30,9 @@ class Rad::Tracker::GitTracker < Rad::Tracker
 
     changed.map do |x|
       if x.untracked
-        Rad::TrackedFile.new x.path, Rad::TrackedFile::NEW
+        Insup::TrackedFile.new x.path, Insup::TrackedFile::NEW
       else
-        Rad::TrackedFile.new x.path, STATUS_MAP[x.type]
+        Insup::TrackedFile.new x.path, STATUS_MAP[x.type]
       end
     end
   end

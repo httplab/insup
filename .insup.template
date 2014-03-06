@@ -1,0 +1,28 @@
+track:
+  - media
+  - snippets
+  - templates
+
+tracker:
+  class: Insup::Tracker::GitTracker
+
+uploader:
+  class: Insup::Uploader::InsalesUploader
+  subdomain:
+  password:
+  api_key:
+
+ignore:
+  - *.swp
+  - *.swx
+  - .*
+
+
+development:
+  uploader:
+    theme_id:
+
+production:
+  uploader:
+    theme_id:
+

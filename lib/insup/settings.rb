@@ -1,14 +1,14 @@
 require 'singleton'
 require 'yaml'
 
-class Rad::Settings
+class Insup::Settings
   include Singleton
 
   attr_reader :settings
 
   def initialize
-    radfile = IO.read('.rad')
-    @settings = YAML.load(radfile)
+    insupfile = IO.read('.insup')
+    @settings = YAML.load(insupfile)
   end
 
   def get_tracked_locations

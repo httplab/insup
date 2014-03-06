@@ -1,4 +1,4 @@
-class Rad::Tracker
+class Insup::Tracker
 
   def initialize config = nil
     @config = config
@@ -27,11 +27,10 @@ class Rad::Tracker
     res.flatten
   end
 
-
   protected
 
   def tracked_locations
-    track = ::Rad::Settings.instance.get_tracked_locations
+    track = ::Insup::Settings.instance.get_tracked_locations
   end
 
 

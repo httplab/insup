@@ -1,6 +1,6 @@
 requre 'uri'
 
-class Rad::Uploader::HttpUploader < Rad::Uploader
+class Insup::Uploader::HttpUploader < Insup::Uploader
 
   def upload_new_file file
 
