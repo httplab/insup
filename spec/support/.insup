@@ -1,0 +1,34 @@
+track:
+  - media
+  - snippets
+  - templates
+
+tracker:
+  class: Insup::Tracker::GitTracker
+
+uploader:
+  class: Insup::Uploader::InsalesUploader
+  subdomain: subdomain.myinsales.ru
+  password: password
+  api_key: apikey
+
+ignore:
+  - '*.swp'
+  - '*.swx'
+  - '.*'
+
+
+environment:
+  development:
+    ignore:
+      - '*.swp'
+      - '*.swx'
+      - '.*'
+      - '*.js'
+    uploader:
+      theme_id: 1
+
+  production:
+    uploader:
+      theme_id: 2
+
