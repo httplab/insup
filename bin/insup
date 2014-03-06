@@ -20,6 +20,7 @@ Usage:
        insup config
        insup list-files
        insup listen
+       insup init
 EOS
   stop_on SUB_COMMANDS
 end
@@ -38,19 +39,17 @@ Dir.mkdir('log') unless Dir.exist?('log')
 
 case cmd
 when 'status'
-  Insup.list_changes
+  Insup.status
 when 'config'
   Insup.print_config
 when 'tracked_locations'
-  Insup::Settings.instance.get_tracked_locations.each do |tl|
-      puts tl
-  end
+  Insup.tracked_locations
 when 'list-files'
-  Insup.tracked_files.each do |f|
-    puts f
-  end
+  Insup.list_files
 when 'commit'
-  Insup.upload_changes ARGV.map{|f| Insup::TrackedFile.new(f,Insup::TrackedFile::MODIFIED)}
+  Insup.commit ARGV.map{|f| Insup::TrackedFile.new(f,Insup::TrackedFile::MODIFIED)}
 when 'listen'
   Insup.listen
+when 'init'
+  puts 'NOT IMPLEMENTED'
 end

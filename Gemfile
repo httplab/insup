@@ -7,4 +7,5 @@ gem 'colorize'
 gem 'trollop'
 gem 'insales_api', git: 'git@github.com:httplab/insales_api.git', branch: 'master'
 gem 'listen'
+gem 'rspec'
 

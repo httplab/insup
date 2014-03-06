@@ -13,16 +13,17 @@ uploader:
   api_key:
 
 ignore:
-  - *.swp
-  - *.swx
-  - .*
+  - '*.swp'
+  - '*.swx'
+  - '.*'
 
 
-development:
-  uploader:
-    theme_id:
+environment:
+  development:
+    uploader:
+      theme_id:
 
-production:
-  uploader:
-    theme_id:
+  production:
+    uploader:
+      theme_id:
 

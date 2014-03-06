@@ -1,0 +1,1 @@
+module Insup::Exceptions; end

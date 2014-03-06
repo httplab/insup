@@ -1,10 +1,7 @@
 require 'colorize'
-require 'io/console'
-
 
 module Insup
   VERSION = "0.1"
-
 
   def self.get_uploader
     if uploader_conf = Settings.instance.uploader
@@ -14,7 +11,6 @@ module Insup
     end
   end
 
-
   def self.get_tracker
     if tracker_conf = Settings.instance.tracker
       Object::const_get(tracker_conf['class']).new tracker_conf
@@ -23,14 +19,12 @@ module Insup
     end
   end
 
-
-  def self.tracked_files
+  def self.list_files
     tracker = get_tracker
     tracker.tracked_files
   end
 
-
-  def self.get_changes
+  def self.status
     begin
       tracker = get_tracker
       tracker.get_changes
@@ -39,8 +33,7 @@ module Insup
     end
   end
 
-
-  def self.upload_changes changed_files = nil
+  def self.commit changed_files = nil
     begin
       changed_files ||= get_changes
       uploader = get_uploader
@@ -50,8 +43,7 @@ module Insup
     end
   end
 
-
-  def self.list_changes
+  def self.status
     get_changes.each do |x|
       case x.state
       when Insup::TrackedFile::NEW
@@ -64,7 +56,6 @@ module Insup
     end
   end
 
-
   def self.print_config
     puts 'Tracked locations:'
 
@@ -76,12 +67,10 @@ module Insup
     puts "Uploader #{Insup::Settings.instance.uploader['class']}"
   end
 
-
   def self.listen
     tracker = get_tracker
     if tracker.respond_to? :listen
       tracker.listen do |changes|
-        puts '------------------------------>'
         # upload_changes changes
       end
 
@@ -102,7 +91,7 @@ module Insup
 
 end
 
-
+require_relative 'insup/exceptions.rb'
 require_relative 'insup/settings.rb'
 require_relative 'insup/tracked_file.rb'
 require_relative 'insup/tracker.rb'

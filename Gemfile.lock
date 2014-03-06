@@ -39,6 +39,7 @@ GEM
       celluloid (>= 0.15.0)
       nio4r (>= 0.5.0)
     colorize (0.6.0)
+    diff-lcs (1.2.5)
     ffi (1.9.3)
     i18n (0.6.9)
     listen (2.5.0)
@@ -55,6 +56,14 @@ GEM
     rb-fsevent (0.9.4)
     rb-inotify (0.9.3)
       ffi (>= 0.5.0)
+    rspec (2.14.1)
+      rspec-core (~> 2.14.0)
+      rspec-expectations (~> 2.14.0)
+      rspec-mocks (~> 2.14.0)
+    rspec-core (2.14.8)
+    rspec-expectations (2.14.5)
+      diff-lcs (>= 1.1.3, < 2.0)
+    rspec-mocks (2.14.6)
     thread_safe (0.1.3)
       atomic
     timers (1.1.0)
@@ -71,4 +80,5 @@ DEPENDENCIES
   insales_api!
   listen
   rake
+  rspec
   trollop
