@@ -6,3 +6,5 @@ log
 
 /.tags*
 /*.sublime-*
+
+insup-*.gem
