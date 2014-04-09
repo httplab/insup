@@ -7,6 +7,7 @@ require 'bundler/setup' if File.exists?(ENV['BUNDLE_GEMFILE'])
 
 require 'trollop'
 
+require_relative '../lib/insup/version'
 require_relative '../lib/insup.rb'
 
 SUB_COMMANDS = %w(status config commit tracked_locations list-files listen)

@@ -42,7 +42,7 @@ GEM
     diff-lcs (1.2.5)
     ffi (1.9.3)
     i18n (0.6.9)
-    listen (2.5.0)
+    listen (2.7.0)
       celluloid (>= 0.15.2)
       celluloid-io (>= 0.15.0)
       rb-fsevent (>= 0.9.3)

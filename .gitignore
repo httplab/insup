@@ -3,3 +3,6 @@ vendor/bundle
 .irb-history
 .insup
 log
+
+/.tags*
+/*.sublime-*

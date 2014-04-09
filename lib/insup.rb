@@ -1,7 +1,6 @@
 require 'colorize'
 
 module Insup
-  VERSION = "0.1"
 
   def self.get_uploader
     if uploader_conf = Settings.instance.uploader
