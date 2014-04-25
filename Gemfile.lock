@@ -6,6 +6,7 @@ PATH
       colorize
       gli
       listen (~> 2.7.1)
+      match_files
       trollop
 
 GEM
@@ -41,6 +42,7 @@ GEM
       celluloid-io (>= 0.15.0)
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
+    match_files (0.1)
     minitest (5.3.3)
     nio4r (1.0.0)
     rails-observers (0.1.2)
