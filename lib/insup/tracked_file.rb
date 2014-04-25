@@ -4,6 +4,7 @@ class Insup::TrackedFile < Struct.new(:path, :state)
   NEW = 0
   MODIFIED = 1
   DELETED = 2
+  UNSURE = 3
 
   def file_name
     Pathname.new(path).basename.to_s

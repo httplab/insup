@@ -3,7 +3,7 @@ class Insup::Tracker::SimpleTracker < Insup::Tracker
 
   def get_changes
     tracked_files.map do |p|
-      Insup::TrackedFile.new p, Insup::TrackedFile::MODIFIED
+      Insup::TrackedFile.new(p, Insup::TrackedFile::MODIFIED)
     end
   end
 
