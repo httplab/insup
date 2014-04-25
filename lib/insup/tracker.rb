@@ -1,30 +1,16 @@
 class Insup::Tracker
 
-  def initialize config = nil
+  def initialize(config = nil)
     @config = config
-
-    if config.present?
-      @path = config[:path]
-    end
-
-    @path ||= Dir.pwd
+    @path = Dir.getwd
   end
 
-
   def tracked_files
-    track = tracked_locations
-
-    res = []
-
-    Dir.chdir(@path) do
-
-      track.each do |loc|
-        res << (get_files loc)
-      end
-
-    end
-
-    res.flatten
+    locations = tracked_locations
+    locations.map do |loc|
+      Dir.glob(File.join(@path, loc,'**/*'), File::FNM_DOTMATCH)
+        .select{|e| File::file?(e)}
+    end.flatten
   end
 
   protected
@@ -33,21 +19,4 @@ class Insup::Tracker
     track = ::Insup::Settings.instance.tracked_locations
   end
 
-
-  private
-
-  def get_files path
-    if File.directory? path
-      res = []
-
-      Dir.foreach(path) do |entry|
-        next if ['..','.'].include? entry
-        res << (get_files "#{path}/#{entry}")
-      end
-
-      res.flatten
-    else
-      [path]
-    end
-  end
 end
