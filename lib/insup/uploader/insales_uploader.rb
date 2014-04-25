@@ -1,5 +1,5 @@
-require 'insales_api'
 require 'base64'
+require_relative '../insales'
 
 class Insup::Uploader::InsalesUploader < Insup::Uploader
 
@@ -112,7 +112,7 @@ private
       active_resource_logger.level = Logger::DEBUG
       ActiveResource::Base.logger = active_resource_logger
 
-      @has_api = InsalesApi::Base.configure @config['api_key'], @config['subdomain'], @config['password']
+      @has_api = ::Insup::Insales::Base.configure(@config['api_key'], @config['subdomain'], @config['password'])
     end
   end
 

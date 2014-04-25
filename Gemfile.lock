@@ -1,16 +1,8 @@
-GIT
-  remote: git@github.com:httplab/insales_api.git
-  revision: 0ae4408c904220935c7f90c5cdc6adca727e7693
-  branch: master
-  specs:
-    insales_api (0.1.0.pre)
-      activeresource (>= 3.0.0)
-      activesupport (>= 3.0.0)
-
 PATH
   remote: .
   specs:
     insup (0.1)
+      activeresource (~> 4.0.0)
       colorize
       gli
       listen (~> 2.7.1)
@@ -74,6 +66,5 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  insales_api!
   insup!
   rspec (~> 2.0)
