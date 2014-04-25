@@ -1,4 +1,4 @@
-require_relative '../../lib/insup.rb'
+require_relative '../../spec_helper'
 
 describe 'Insup::Settings' do
   before(:each) do

@@ -7,13 +7,6 @@ GIT
       activeresource (>= 3.0.0)
       activesupport (>= 3.0.0)
 
-GIT
-  remote: git@github.com:schacon/ruby-git.git
-  revision: 41d9e3e4958b491a9595d7c216ba4278246bde5f
-  branch: master
-  specs:
-    git (1.2.6)
-
 PATH
   remote: .
   specs:
@@ -82,7 +75,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  git!
   insales_api!
   insup!
   rspec (~> 2.0)
