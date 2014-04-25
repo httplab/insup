@@ -1,6 +1,6 @@
 GIT
   remote: git@github.com:httplab/insales_api.git
-  revision: 95d67cd59d480f473019041fde18c8b5642d163d
+  revision: 0ae4408c904220935c7f90c5cdc6adca727e7693
   branch: master
   specs:
     insales_api (0.1.0.pre)

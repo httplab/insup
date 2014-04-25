@@ -3,6 +3,10 @@ require 'yaml'
 class Insup::Settings
   attr_reader :settings
 
+  def self.instance
+    @instance ||= new()
+  end
+
   def initialize(filename = '.insup')
     insupfile = IO.read(filename)
     @settings = YAML.load(insupfile)

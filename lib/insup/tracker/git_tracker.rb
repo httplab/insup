@@ -1,9 +1,11 @@
+require_relative('../git')
+
 # Git tracker: tracks files by evaluating changes in Git repo
 class Insup::Tracker::GitTracker < Insup::Tracker
 
   def initialize config = nil
     super
-    @git = Git.open(@path)
+    @git = ::Insup::Git.new(@path)
   end
 
   def get_changes
@@ -22,15 +24,15 @@ class Insup::Tracker::GitTracker < Insup::Tracker
   }
 
   def status
-    changed = @git.status.select do |x|
-      x.untracked || (['A','M','D'].include? x.type)
+    changed = @git.status.select do |x,v|
+      v[:untracked] || (['A','M','D'].include? v[:type])
     end
 
-    changed.map do |x|
-      if x.untracked
-        Insup::TrackedFile.new x.path, Insup::TrackedFile::NEW
+    changed.map do |x, v|
+      if v[:untracked]
+        Insup::TrackedFile.new v[:path], Insup::TrackedFile::NEW
       else
-        Insup::TrackedFile.new x.path, STATUS_MAP[x.type]
+        Insup::TrackedFile.new v[:path], STATUS_MAP[v[:type]]
       end
     end
   end

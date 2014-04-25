@@ -8,7 +8,8 @@ class Insup::Git
     files = ls_files
     ignore = ignored_files
 
-    # find untracked in working dir
+
+
     Dir.chdir(@base) do
       Dir.glob('**/*', File::FNM_DOTMATCH) do |file|
         next if files[file] || File.directory?(file) || ignore.include?(file) || file =~ /^.git\/.+/
@@ -16,12 +17,10 @@ class Insup::Git
       end
     end
 
-    # find modified in tree
     diff_files.each do |path, data|
       files[path] ? files[path].merge!(data) : files[path] = data
     end
 
-    # find added but not committed - new files
     diff_index('HEAD').each do |path, data|
       files[path] ? files[path].merge!(data) : files[path] = data
     end
@@ -29,6 +28,8 @@ class Insup::Git
     files.each do |k, file_hash|
       file_hash
     end
+
+    files
   end
 
   private
@@ -43,7 +44,7 @@ class Insup::Git
       (info, file) = line.split("\t")
       (mode, sha, stage) = info.split
       file = eval(file) if file =~ /^\".*\"$/
-      hsh[file] = {:path => file, :mode_index => mode, :sha_index => sha, :stage => stage}
+      hsh[file] = {:path => file, :stage => stage}
     end
     hsh
   end
@@ -54,10 +55,10 @@ class Insup::Git
 
   def command(cmd, opts = [])
     opts = [opts].flatten.map {|s| escape(s) }.join(' ')
-    git_cmd = "git #{cmd} #{opts} #{redirect} 2>&1"
+    git_cmd = "git #{cmd} #{opts} 2>&1"
     out = nil
 
-    if chdir && (Dir.getwd != @base)
+    if Dir.getwd != @base
       Dir.chdir(@base) { out = `#{git_cmd}` }
     else
       out = `#{git_cmd}`
@@ -87,16 +88,20 @@ class Insup::Git
       mode_src, mode_dest, sha_src, sha_dest, type = info.split
 
       memo[file] = {
-        :mode_index => mode_dest,
-        :mode_repo => mode_src.to_s[1, 7],
+        # :mode_index => mode_dest,
+        # :mode_repo => mode_src.to_s[1, 7],
         :path => file,
-        :sha_repo => sha_src,
-        :sha_index => sha_dest,
+        # :sha_repo => sha_src,
+        # :sha_index => sha_dest,
         :type => type
       }
 
       memo
     end
+  end
+
+  def escape(s)
+    "'#{s && s.to_s.gsub('\'','\'"\'"\'')}'"
   end
 
 end

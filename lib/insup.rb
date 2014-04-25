@@ -28,15 +28,6 @@ module Insup
     tracker.get_changes
   end
 
-  def self.status
-    begin
-      tracker = get_tracker
-      tracker.get_changes
-    rescue => ex
-      puts ex
-    end
-  end
-
   def self.commit changed_files = nil
     begin
       changed_files ||= get_changes
@@ -63,7 +54,7 @@ module Insup
   def self.print_config
     puts 'Tracked locations:'
 
-    Insup::Settings.instance.get_tracked_locations.each do |tl|
+    Insup::Settings.instance.tracked_locations.each do |tl|
       puts tl
     end
 
