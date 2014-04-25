@@ -1,4 +1,4 @@
-require('colorize')
+require 'colorize'
 
 class Insup::Uploader::DummyUploader < Insup::Uploader
 

@@ -1,4 +1,5 @@
-requre 'uri'
+require 'uri'
+require 'net/http'
 
 class Insup::Uploader::HttpUploader < Insup::Uploader
 

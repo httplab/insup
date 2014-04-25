@@ -1,5 +1,3 @@
-require 'git'
-
 # Git tracker: tracks files by evaluating changes in Git repo
 class Insup::Tracker::GitTracker < Insup::Tracker
 
