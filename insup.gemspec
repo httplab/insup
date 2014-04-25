@@ -1,5 +1,4 @@
-$:.push File.expand_path('../lib', __FILE__)
-require 'insup/version'
+require File.expand_path("../lib/insup/version", __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = 'insup'
@@ -9,21 +8,21 @@ Gem::Specification.new do |s|
 
   s.summary     = 'InSales theme uploader.'
   s.description = 'Utility for automatic upload of InSales theme files.'
-  s.authors     = 'Nikita Chernuhin'
-  s.email       = 'n@httplab.ru'
+  s.authors     = ['HttpLab', 'Nikita Chernuhin']
+  s.email       = 'nuinuhin@gmail.com'
   s.homepage    = 'https://github.com/httplab/insup'
   s.license     = 'MIT'
 
-  s.add_dependency 'rake'
-  s.add_dependency 'awesome_print'
   s.add_dependency 'colorize'
   s.add_dependency 'trollop'
-  s.add_dependency 'listen', '~> 1.5.7'
+  s.add_dependency 'listen', '~> 2.7.1'
+  s.add_dependency 'gli'
+
 
   s.add_development_dependency 'rspec', '~> 2.0'
-
   s.files = `git ls-files`.split("\n")
-
   s.bindir = 'bin'
+  s.test_files = `git ls-files -- {spec}/*`.split("\n")
+  s.require_paths = ["lib"]
   s.executables << 'insup'
 end

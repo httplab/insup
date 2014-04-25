@@ -23,6 +23,11 @@ module Insup
     tracker.tracked_files
   end
 
+  def self.get_changes
+    tracker = get_tracker
+    tracker.get_changes
+  end
+
   def self.status
     begin
       tracker = get_tracker

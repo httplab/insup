@@ -30,7 +30,7 @@ class Insup::Tracker
   protected
 
   def tracked_locations
-    track = ::Insup::Settings.instance.get_tracked_locations
+    track = ::Insup::Settings.instance.tracked_locations
   end
 
 
