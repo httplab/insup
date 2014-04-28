@@ -1,6 +1,13 @@
 require 'colorize'
+require 'fileutils'
 
 module Insup
+  def self.init(dir = nil)
+    dir ||= Dir.getwd
+
+    template_file = File.join(File.dirname(File.expand_path(__FILE__)), '../.insup.template')
+    FileUtils.cp(template_file, File.join(dir, '.insup'))
+  end
 
   def self.get_uploader
     if uploader_conf = Settings.instance.uploader

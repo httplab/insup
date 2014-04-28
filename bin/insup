@@ -10,7 +10,7 @@ require 'trollop'
 require_relative '../lib/insup/version'
 require_relative '../lib/insup.rb'
 
-SUB_COMMANDS = %w(status config commit tracked_locations list-files listen)
+SUB_COMMANDS = %w(init status config commit tracked_locations list-files listen)
 
 global_opts = Trollop::options do
   version "insup #{Insup::VERSION} (c) 2014 nuinuhin@gmail.com"
@@ -52,5 +52,5 @@ when 'commit'
 when 'listen'
   Insup.listen
 when 'init'
-  puts 'NOT IMPLEMENTED'
+  Insup.init(ARGV[0])
 end
