@@ -3,17 +3,18 @@ require 'colorize'
 
 class Listener
 
-  def init(tracked_locations, ignore_patterns)
+  def initialize(tracked_locations, ignore_patterns)
     @tracked_locations = tracked_locations
     @ignore_patterns = ignore_patterns
   end
 
+  def ignore_matcher
+  end
 
-  def listen &block
+  def listen(&block)
     return if @listener
 
-    @listener = Listen.to(tracked_locations) do |modified, added, removed|
-      puts changes
+    @listener = Listen.to(@tracked_locations) do |modified, added, removed|
       flags = {}
 
       added.each do |file|
@@ -42,24 +43,22 @@ class Listener
           res << Insup::TrackedFile.new(file, Insup::TrackedFile::NEW)
         when 5
           if File.exist?(file)
-            puts "#{file} exists!"
-            res << Insup::TrackedFile.new(file, Insup::TrackedFile::MODIFIED)
+            res << Insup::TrackedFile.new(file, Insup::TrackedFile::UNSURE)
           end
         when 6
           res << Insup::TrackedFile.new(file, Insup::TrackedFile::NEW)
         when 7
           if File.exist?(file)
-            puts "#{file} exists!"
-            res << Insup::TrackedFile.new(file, Insup::TrackedFile::MODIFIED)
+            res << Insup::TrackedFile.new(file, Insup::TrackedFile::UNSURE)
           end
         end
       end
 
       yield res
     end
+
     @listener.start
   end
-
 
   def stop
     if @listener

@@ -77,25 +77,30 @@ module Insup
   end
 
   def self.listen
-    tracker = get_tracker
-    if tracker.respond_to? :listen
-      tracker.listen do |changes|
-        # upload_changes changes
+    listener = Listener.new(Settings.instance.tracked_locations,
+      Settings.instance.ignore_patterns)
+
+    listener.listen do |changes|
+      changes.each do |change|
+        case change.state
+        when Insup::TrackedFile::DELETED
+          uploader.remove_file(change)
+        else
+          uploader.upload_file(change)
+        end
       end
-
-      exit_requested = false
-      Kernel.trap( "INT" ) { exit_requested = true }
-
-      while !exit_requested do
-        sleep 0.1
-      end
-
-      puts 'Stopping listener...'
-      tracker.stop
-      puts 'Terminated by user'
-    else
-      puts "#{tracker.class.name} does not support listening"
     end
+
+    exit_requested = false
+    Kernel.trap( "INT" ) { exit_requested = true }
+
+    while !exit_requested do
+      sleep 0.1
+    end
+
+    puts 'Stopping listener...'
+    listener.stop
+    puts 'Terminated by user'
   end
 
 end
