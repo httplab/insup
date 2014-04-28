@@ -25,7 +25,7 @@ class Insup::Settings
   end
 
   def ignore_patterns
-    return settings['ignore']
+    return settings['ignore'] || []
   end
 
   def insales

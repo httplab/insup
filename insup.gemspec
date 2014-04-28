@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
 
   s.summary     = 'InSales theme uploader.'
   s.description = 'Utility for automatic upload of InSales theme files.'
-  s.authors     = ['HttpLab', 'Nikita Chernuhin']
+  s.authors     = ['HttpLab', 'Nu-hin']
   s.email       = 'nuinuhin@gmail.com'
   s.homepage    = 'https://github.com/httplab/insup'
   s.license     = 'MIT'

@@ -8,7 +8,7 @@ class Insup::Tracker::GitTracker < Insup::Tracker
     @git = ::Insup::Git.new(@path)
   end
 
-  def get_changes
+  def changes
     track = tracked_locations
     res = status.select do |x|
       track.any? {|t| x.path.start_with? t}

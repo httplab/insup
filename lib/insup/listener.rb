@@ -1,10 +1,11 @@
 require 'listen'
 require 'colorize'
 
-class ListenTracker < Insup::Tracker
+class Listener
 
-  def get_changes
-    nil
+  def init(tracked_locations, ignore_patterns)
+    @tracked_locations = tracked_locations
+    @ignore_patterns = ignore_patterns
   end
 
 

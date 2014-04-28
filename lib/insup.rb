@@ -2,6 +2,8 @@ require 'colorize'
 require 'fileutils'
 
 module Insup
+
+  # Initializes a directory with a default .insup file
   def self.init(dir = nil)
     dir ||= Dir.getwd
 
@@ -9,30 +11,37 @@ module Insup
     FileUtils.cp(template_file, File.join(dir, '.insup'))
   end
 
-  def self.get_uploader
-    if uploader_conf = Settings.instance.uploader
+  def self.list_locations
+    puts Insup::Settings.instance.tracked_locations
+  end
+
+  def self.list_files(options = {})
+    files = case options[:mode]
+    when nil
+      tracker.tracked_files
+    when :all
+      tracker.all_files
+    when :ignored
+      tracker.ignored_files
+    end
+
+    puts files
+  end
+
+  def self.uploader
+    @uploader ||= if uploader_conf = Settings.instance.uploader
       Object::const_get(uploader_conf['class']).new(uploader_conf)
     else
       Uploader::Dummy.new(uploader_conf)
     end
   end
 
-  def self.get_tracker
-    if tracker_conf = Settings.instance.tracker
+  def self.tracker
+    @tracker ||= if tracker_conf = Settings.instance.tracker
       Object::const_get(tracker_conf['class']).new(tracker_conf)
     else
       Tracker::SimpleTracker.new(tracker_conf)
     end
-  end
-
-  def self.list_files
-    tracker = get_tracker
-    tracker.tracked_files
-  end
-
-  def self.get_changes
-    tracker = get_tracker
-    tracker.get_changes
   end
 
   def self.commit(changed_files = nil)
@@ -46,7 +55,7 @@ module Insup
   end
 
   def self.status
-    get_changes.each do |x|
+    tracker.changes.each do |x|
       case x.state
       when Insup::TrackedFile::NEW
         puts "New:      #{x.path}".green
@@ -99,7 +108,7 @@ require_relative 'insup/tracked_file.rb'
 require_relative 'insup/tracker.rb'
 require_relative 'insup/tracker/git_tracker.rb'
 require_relative 'insup/tracker/simple_tracker.rb'
-require_relative 'insup/tracker/listen_tracker.rb'
+require_relative 'insup/listener.rb'
 require_relative 'insup/uploader.rb'
 require_relative 'insup/uploader/dummy_uploader.rb'
 require_relative 'insup/uploader/insales_uploader.rb'

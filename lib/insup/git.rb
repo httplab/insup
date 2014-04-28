@@ -8,8 +8,6 @@ class Insup::Git
     files = ls_files
     ignore = ignored_files
 
-
-
     Dir.chdir(@base) do
       Dir.glob('**/*', File::FNM_DOTMATCH) do |file|
         next if files[file] || File.directory?(file) || ignore.include?(file) || file =~ /^.git\/.+/
