@@ -28,6 +28,10 @@ class Insup::Settings
     return settings['ignore']
   end
 
+  def insales
+    return settings['insales']
+  end
+
   def settings
     @settings
   end

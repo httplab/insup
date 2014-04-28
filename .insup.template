@@ -6,13 +6,18 @@ track:
 tracker:
   class: Insup::Tracker::GitTracker
 
-uploader:
-  class: Insup::Uploader::InsalesUploader
+insales:
   subdomain:
   password:
   api_key:
+
+uploader:
+  class: Insup::Uploader::InsalesUploader
+  theme_id:
 
 ignore:
   - '*.swp'
   - '*.swx'
   - '.*'
+  - 'thumbs.db'
+  - '.DS_Store'

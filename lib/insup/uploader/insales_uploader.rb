@@ -3,6 +3,10 @@ require_relative '../insales'
 
 class Insup::Uploader::InsalesUploader < Insup::Uploader
 
+  def initialize
+    Insup::Insales.configure_api
+  end
+
   def upload_new_file file
     asset = find_asset file
 
@@ -13,7 +17,6 @@ class Insup::Uploader::InsalesUploader < Insup::Uploader
 
     puts "Creating #{file.path}"
 
-    configure_api
     asset_type = get_asset_type file.path
 
     if(!asset_type)
@@ -31,7 +34,6 @@ class Insup::Uploader::InsalesUploader < Insup::Uploader
   end
 
   def upload_modified_file file
-    configure_api
     asset = find_asset file
 
     puts "Updating #{file.path}"
@@ -57,7 +59,6 @@ class Insup::Uploader::InsalesUploader < Insup::Uploader
   end
 
   def remove_file file
-    configure_api
     asset = find_asset file
     if !asset
       raise "Cannot find remote counterpart for file #{file.path}"
@@ -106,30 +107,15 @@ private
     return res
   end
 
-  def configure_api
-    if !@has_api
-      active_resource_logger = Logger.new('log/active_resource.log', 'daily')
-      active_resource_logger.level = Logger::DEBUG
-      ActiveResource::Base.logger = active_resource_logger
-
-      @has_api = ::Insup::Insales::Base.configure(@config['api_key'], @config['subdomain'], @config['password'])
-    end
-  end
-
   def theme
-    configure_api
     @theme ||= InsalesApi::Theme.find(@config['theme_id'])
   end
 
   def assets_list
-    configure_api
     @assets_list ||= theme.assets.to_a
-    # @assets_list.each {|x| puts x.inspect}
-    # @assets_list
   end
 
   def get_asset file
-    configure_api
     asset = find_asset file
 
     if !asset

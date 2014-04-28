@@ -10,7 +10,7 @@ require 'trollop'
 require_relative '../lib/insup/version'
 require_relative '../lib/insup.rb'
 
-SUB_COMMANDS = %w(init status config commit tracked_locations list-files listen)
+SUB_COMMANDS = %w(init status config commit tracked_locations list-files listen insales)
 
 global_opts = Trollop::options do
   version "insup #{Insup::VERSION} (c) 2014 nuinuhin@gmail.com"
@@ -22,6 +22,7 @@ Usage:
        insup list-files
        insup listen
        insup init
+       insup insales list-themes
 EOS
   stop_on SUB_COMMANDS
 end
@@ -53,4 +54,11 @@ when 'listen'
   Insup.listen
 when 'init'
   Insup.init(ARGV[0])
+when 'insales'
+  cmd = ARGV.shift
+  case cmd
+  when 'list-themes'
+    Insup::Insales.list_themes
+  end
+
 end
