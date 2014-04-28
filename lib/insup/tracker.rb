@@ -10,7 +10,7 @@ class Insup::Tracker
   def all_files
     locations = tracked_locations
     locations.map do |loc|
-      loc_pat = File.join(@path, loc, '**/*')
+      loc_pat = File.join(loc, '**/*')
       Dir.glob(loc_pat, File::FNM_DOTMATCH)
         .select{|e| File.file?(e)}
     end.flatten
@@ -26,9 +26,17 @@ class Insup::Tracker
     all_files.select{|f| ignore_matcher.matched?(f)}
   end
 
-  def changes; end
+  def changes
+    res = raw_changes.select do |x|
+      tracked_locations.any? do |loc|
+        !ignore_matcher.matched?(x.path) && File.fnmatch(File.join(loc,'/*'), x.path)
+      end
+    end
+  end
 
   protected
+
+  def raw_changes; end;
 
   def ignore_matcher
     @ignore_matcher ||= ::MatchFiles.git(@path, ignore_patterns)

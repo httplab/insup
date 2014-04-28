@@ -3,21 +3,31 @@ require_relative '../insales'
 
 class Insup::Uploader::InsalesUploader < Insup::Uploader
 
-  def initialize
+  def initialize(config)
+    super
     Insup::Insales.configure_api
+    asset_hash(true)
   end
 
-  def upload_new_file file
-    asset = find_asset file
+  def upload_file(file)
+    case file.state
+    when Insup::TrackedFile::NEW
+      upload_new_file(file)
+    when Insup::TrackedFile::MODIFIED
+    when Insup::TrackedFile::UNSURE
+    end
+  end
+
+  def upload_new_file(file)
+    asset = find_asset(file)
 
     if !asset.nil?
-      upload_modified_file file
+      upload_modified_file(file)
       return
     end
 
-    puts "Creating #{file.path}"
-
-    asset_type = get_asset_type file.path
+    puts "Creating #{file.path}".green
+    asset_type = get_asset_type(file.path)
 
     if(!asset_type)
       raise "Cannot determine asset type for file #{file.path}"
@@ -31,40 +41,40 @@ class Insup::Uploader::InsalesUploader < Insup::Uploader
       theme_id: @config['theme_id'],
       type: asset_type
     })
+
+    assets_list << asset
   end
 
-  def upload_modified_file file
-    asset = find_asset file
-
-    puts "Updating #{file.path}"
+  def upload_modified_file(file)
+    asset = find_asset(file)
 
     if !asset
-      raise "Cannot find remote counterpart for file #{file.path}"
+      upload_new_file(file)
     end
+
+    puts "Updating #{file.path}".yellow
 
     file_contents = File.read(file.path)
 
     if asset.content_type.start_with? 'text/'
       asset.update_attribute(:content, file_contents)
     else
-      asset.destroy
-      asset_type = get_asset_type file.path
-      asset = InsalesApi::Asset.create({
-      name: file.file_name,
-      attachment: Base64.encode64(file_contents),
-      theme_id: @config['theme_id'],
-      type: asset_type
-    })
+      remove_file(file)
+      upload_new_file(file)
     end
   end
 
-  def remove_file file
-    asset = find_asset file
+  def remove_file(file)
+    asset = find_asset(file)
+
     if !asset
       raise "Cannot find remote counterpart for file #{file.path}"
     end
 
+    puts "Deleting #{file.path}".yellow
+
     asset.destroy
+    assets_list.remove(asset)
   end
 
 private
@@ -74,15 +84,29 @@ private
     'templates/' => 'Asset::Template'
   }.freeze
 
+  def get_asset_type path
+    res = nil
+
+    ASSET_TYPE_MAP.each do |k,v|
+      if path.start_with? k
+        res = v
+        break
+      end
+    end
+
+    res
+  end
+
+  def theme
+    @theme ||= ::Insup::Insales::Theme.find(@config['theme_id'])
+  end
 
   def find_asset file
-    asset_type = get_asset_type file.path
+    asset_type = get_asset_type(file.path)
 
     if(!asset_type)
       raise "Cannot determine asset type for file #{file.path}"
     end
-
-    assets = assets_list
 
     files = assets.select  do |el|
       el.type == asset_type && (el.human_readable_name == file.file_name || el.name == file.file_name)
@@ -95,34 +119,12 @@ private
     end
   end
 
-  def get_asset_type path
-    res = nil
-    ASSET_TYPE_MAP.each do |k,v|
-      if path.start_with? k
-        res = v
-        break
-      end
+  def assets_list(reload = false)
+    if !@assets_list || reload
+      @assets_list ||= theme.assets.to_a
+    else
+      @assets_list
     end
-
-    return res
-  end
-
-  def theme
-    @theme ||= InsalesApi::Theme.find(@config['theme_id'])
-  end
-
-  def assets_list
-    @assets_list ||= theme.assets.to_a
-  end
-
-  def get_asset file
-    asset = find_asset file
-
-    if !asset
-      raise "Cannot find remote counterpart for file #{file.path}"
-    end
-
-    InsalesApi::Asset.find(asset.id, params: {theme_id: @config['theme_id']})
   end
 
 end

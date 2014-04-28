@@ -8,14 +8,7 @@ class Insup::Tracker::GitTracker < Insup::Tracker
     @git = ::Insup::Git.new(@path)
   end
 
-  def changes
-    track = tracked_locations
-    res = status.select do |x|
-      track.any? {|t| x.path.start_with? t}
-    end
-  end
-
-  private
+  protected
 
   STATUS_MAP = {
     'A' => Insup::TrackedFile::NEW,
@@ -23,7 +16,7 @@ class Insup::Tracker::GitTracker < Insup::Tracker
     'D' => Insup::TrackedFile::DELETED
   }
 
-  def status
+  def raw_changes
     changed = @git.status.select do |x,v|
       v[:untracked] || (['A','M','D'].include? v[:type])
     end

@@ -68,14 +68,12 @@ module Insup
   end
 
   def self.print_config
+    puts "Tracker: #{Insup::Settings.instance.tracker['class']}"
+    puts "Uploader: #{Insup::Settings.instance.uploader['class']}"
     puts 'Tracked locations:'
-
-    Insup::Settings.instance.tracked_locations.each do |tl|
-      puts tl
-    end
-
-    puts "Tracker #{Insup::Settings.instance.tracker['class']}"
-    puts "Uploader #{Insup::Settings.instance.uploader['class']}"
+    puts Settings.instance.tracked_locations.map{|loc| "\t#{loc}"}
+    puts 'Ignore patterns:'
+    puts Settings.instance.ignore_patterns.map{|ip| "\t#{ip}"}
   end
 
   def self.listen
