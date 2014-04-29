@@ -16,7 +16,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'colorize'
   s.add_dependency 'trollop'
   s.add_dependency 'listen', '~> 2.7.1'
-  s.add_dependency 'gli'
   s.add_dependency 'match_files'
   s.add_dependency 'activeresource', '~> 4.0.0'
 
