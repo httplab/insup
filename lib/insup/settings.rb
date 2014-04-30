@@ -32,8 +32,8 @@ class Insup::Settings
     return settings['insales']
   end
 
-  def settings
-    @settings
+  def save(filename)
+    File.write(filename, @settings.to_yaml)
   end
 
 end

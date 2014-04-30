@@ -1,6 +1,14 @@
 class Insup::Git
 
   def initialize(base)
+    Dir.chdir(base) do
+      `git status 2>&1`
+
+      if $?.exitstatus == 128
+        raise Insup::Exceptions::NotAGitRepositoryError, 'Not a GIT repository'
+      end
+    end
+
     @base = base
   end
 

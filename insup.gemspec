@@ -19,7 +19,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'match_files'
   s.add_dependency 'activeresource', '~> 4.0.0'
 
-  s.add_development_dependency 'rspec', '~> 2.0'
   s.files = `git ls-files`.split("\n")
   s.bindir = 'bin'
   s.test_files = `git ls-files -- {spec}/*`.split("\n")

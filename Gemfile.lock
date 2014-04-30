@@ -67,4 +67,4 @@ PLATFORMS
 
 DEPENDENCIES
   insup!
-  rspec (~> 2.0)
+  rspec

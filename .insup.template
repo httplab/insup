@@ -8,8 +8,8 @@ tracker:
 
 insales:
   subdomain:
-  password:
   api_key:
+  password:
 
 uploader:
   class: Insup::Uploader::InsalesUploader

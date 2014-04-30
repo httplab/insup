@@ -3,7 +3,8 @@ require 'colorize'
 
 class Listener
 
-  def initialize(tracked_locations, ignore_patterns)
+  def initialize(base, tracked_locations, ignore_patterns)
+    @base = base
     @tracked_locations = tracked_locations
     @ignore_patterns = ignore_patterns
   end
@@ -31,7 +32,11 @@ class Listener
 
       res = []
 
-      flags.each do |file,flags|
+      flags.each do |f, flags|
+        pn = Pathname.new(f)
+        basepn = Pathname.new(@base)
+        file = pn.relative_path_from(basepn).to_s
+
         case flags
         when 1
           res << Insup::TrackedFile.new(file, Insup::TrackedFile::DELETED)

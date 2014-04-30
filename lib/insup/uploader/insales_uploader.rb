@@ -3,10 +3,12 @@ require_relative '../insales'
 
 class Insup::Uploader::InsalesUploader < Insup::Uploader
 
+  InsalesUploaderError = Class.new(Insup::Exceptions::UploaderError)
+
   def initialize(config)
     super
     Insup::Insales.configure_api
-    asset_hash(true)
+    assets_list(true)
   end
 
   def upload_file(file)
@@ -14,7 +16,9 @@ class Insup::Uploader::InsalesUploader < Insup::Uploader
     when Insup::TrackedFile::NEW
       upload_new_file(file)
     when Insup::TrackedFile::MODIFIED
+      upload_modified_file(file)
     when Insup::TrackedFile::UNSURE
+      upload_modified_file(file)
     end
   end
 
@@ -30,12 +34,12 @@ class Insup::Uploader::InsalesUploader < Insup::Uploader
     asset_type = get_asset_type(file.path)
 
     if(!asset_type)
-      raise "Cannot determine asset type for file #{file.path}"
+      raise InsalesUploaderError, "Cannot determine asset type for file #{file.path}"
     end
 
     file_contents = File.read(file.path)
 
-    asset = InsalesApi::Asset.create({
+    asset = ::Insup::Insales::Asset.create({
       name: file.file_name,
       attachment: Base64.encode64(file_contents),
       theme_id: @config['theme_id'],
@@ -68,13 +72,12 @@ class Insup::Uploader::InsalesUploader < Insup::Uploader
     asset = find_asset(file)
 
     if !asset
-      raise "Cannot find remote counterpart for file #{file.path}"
+      raise InsalesUploaderError, "Cannot find remote counterpart for file #{file.path}"
     end
 
-    puts "Deleting #{file.path}".yellow
-
+    puts "Deleting #{file.path}".red
     asset.destroy
-    assets_list.remove(asset)
+    assets_list.delete(asset)
   end
 
 private
@@ -105,10 +108,10 @@ private
     asset_type = get_asset_type(file.path)
 
     if(!asset_type)
-      raise "Cannot determine asset type for file #{file.path}"
+      raise InsalesUploaderError, "Cannot determine asset type for file #{file.path}"
     end
 
-    files = assets.select  do |el|
+    files = assets_list.select  do |el|
       el.type == asset_type && (el.human_readable_name == file.file_name || el.name == file.file_name)
     end
 

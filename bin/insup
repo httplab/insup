@@ -38,33 +38,35 @@ if(!SUB_COMMANDS.include? cmd)
   Trollop::die "unknown subcommand #{cmd.inspect}"
 end
 
-Dir.mkdir('log') unless Dir.exist?('log')
-
-case cmd
-when 'status'
-  Insup.status
-when 'config'
-  Insup.print_config
-when 'list-locations'
-  Insup.list_locations
-when 'list-files'
-  if ARGV.include?('--all')
-    Insup.list_files(mode: :all)
-  elsif ARGV.include?('--ignored')
-    Insup.list_files(mode: :ignored)
-  else
-    Insup.list_files
-  end
-when 'commit'
-  Insup.commit ARGV.map{|f| Insup::TrackedFile.new(f,Insup::TrackedFile::MODIFIED)}
-when 'listen'
-  Insup.listen
-when 'init'
-  Insup.init(ARGV[0])
-when 'insales'
-  cmd = ARGV.shift
+begin
   case cmd
-  when 'list-themes'
-    Insup::Insales.list_themes
+  when 'status'
+    Insup.status
+  when 'config'
+    Insup.print_config
+  when 'list-locations'
+    Insup.list_locations
+  when 'list-files'
+    if ARGV.include?('--all')
+      Insup.list_files(mode: :all)
+    elsif ARGV.include?('--ignored')
+      Insup.list_files(mode: :ignored)
+    else
+      Insup.list_files
+    end
+  when 'commit'
+    Insup.commit ARGV.map{|f| Insup::TrackedFile.new(f,Insup::TrackedFile::MODIFIED)}
+  when 'listen'
+    Insup.listen
+  when 'init'
+    Insup.init(ARGV[0])
+  when 'insales'
+    cmd = ARGV.shift
+    case cmd
+    when 'list-themes'
+      Insup::Insales.list_themes
+    end
   end
+rescue => ex
+  puts ex.message
 end

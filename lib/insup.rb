@@ -77,7 +77,7 @@ module Insup
   end
 
   def self.listen
-    listener = Listener.new(Settings.instance.tracked_locations,
+    listener = Listener.new(Dir.getwd, Settings.instance.tracked_locations,
       Settings.instance.ignore_patterns)
 
     listener.listen do |changes|
