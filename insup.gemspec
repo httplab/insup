@@ -24,4 +24,6 @@ Gem::Specification.new do |s|
   s.test_files = `git ls-files -- {spec}/*`.split("\n")
   s.require_paths = ["lib"]
   s.executables << 'insup'
+
+  s.post_install_message = "type 'insup help' for help."
 end
