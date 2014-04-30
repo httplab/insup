@@ -1,5 +1,14 @@
 class Insup::Uploader
 
+  def self.uploader(uploader_alias)
+    @@uploaders ||= {}
+    @@uploaders[uploader_alias] = self
+  end
+
+  def self.find_uploader(uploader_alias)
+    @@uploader[uploader_alias.to_sym]
+  end
+
   def initialize config = nil
     @config = config
   end

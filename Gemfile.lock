@@ -2,11 +2,11 @@ PATH
   remote: .
   specs:
     insup (0.1)
-      activeresource (~> 4.0.0)
-      colorize
-      listen (~> 2.7.1)
-      match_files
-      trollop
+      activeresource (~> 4.0)
+      colorize (~> 0.7)
+      listen (~> 2.7)
+      match_files (~> 0.1)
+      trollop (~> 2.0)
 
 GEM
   remote: https://rubygems.org/

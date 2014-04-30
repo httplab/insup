@@ -13,11 +13,11 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://github.com/httplab/insup'
   s.license     = 'MIT'
 
-  s.add_dependency 'colorize'
-  s.add_dependency 'trollop'
-  s.add_dependency 'listen', '~> 2.7.1'
-  s.add_dependency 'match_files'
-  s.add_dependency 'activeresource', '~> 4.0.0'
+  s.add_dependency 'colorize', '~> 0.7'
+  s.add_dependency 'trollop', '~> 2.0'
+  s.add_dependency 'listen', '~> 2.7'
+  s.add_dependency 'match_files', '~> 0.1'
+  s.add_dependency 'activeresource', '~> 4.0'
 
   s.files = `git ls-files`.split("\n")
   s.bindir = 'bin'

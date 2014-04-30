@@ -3,6 +3,8 @@ require_relative '../insales'
 
 class Insup::Uploader::InsalesUploader < Insup::Uploader
 
+  uploader :insales
+
   InsalesUploaderError = Class.new(Insup::Exceptions::UploaderError)
 
   def initialize(config)

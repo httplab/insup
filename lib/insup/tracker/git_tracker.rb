@@ -3,6 +3,8 @@ require_relative('../git')
 # Git tracker: tracks files by evaluating changes in Git repo
 class Insup::Tracker::GitTracker < Insup::Tracker
 
+  tracker :git
+
   def initialize config = nil
     super
     @git = ::Insup::Git.new(@path)

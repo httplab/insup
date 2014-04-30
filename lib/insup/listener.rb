@@ -1,21 +1,15 @@
 require 'listen'
-require 'colorize'
 
 class Listener
 
-  def initialize(base, tracked_locations, ignore_patterns)
+  def initialize(base)
     @base = base
-    @tracked_locations = tracked_locations
-    @ignore_patterns = ignore_patterns
-  end
-
-  def ignore_matcher
   end
 
   def listen(&block)
     return if @listener
 
-    @listener = Listen.to(@tracked_locations) do |modified, added, removed|
+    @listener = Listen.to(tracked_locations) do |modified, added, removed|
       flags = {}
 
       added.each do |file|
@@ -36,6 +30,8 @@ class Listener
         pn = Pathname.new(f)
         basepn = Pathname.new(@base)
         file = pn.relative_path_from(basepn).to_s
+
+        next if ignore_matcher.matched?(file)
 
         case flags
         when 1
@@ -69,6 +65,20 @@ class Listener
     if @listener
       @listener.stop
     end
+  end
+
+  protected
+
+  def ignore_matcher
+    @ignore_matcher ||= ::MatchFiles.git(@base, ignore_patterns)
+  end
+
+  def tracked_locations
+    @track = ::Insup::Settings.instance.tracked_locations
+  end
+
+  def ignore_patterns
+    @ignore_patterns ||= ::Insup::Settings.instance.ignore_patterns
   end
 
 end

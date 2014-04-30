@@ -30,17 +30,19 @@ module Insup
 
   def self.uploader
     @uploader ||= if uploader_conf = Settings.instance.uploader
-      Object::const_get(uploader_conf['class']).new(uploader_conf)
+      klass = Insup::Uploader.find_uploader(uploader_conf['class']) || Object::const_get(uploader_conf['class'])
+      klass.new(uploader_conf)
     else
-      Uploader::Dummy.new(uploader_conf)
+      Uploader::Dummy.new({})
     end
   end
 
   def self.tracker
     @tracker ||= if tracker_conf = Settings.instance.tracker
-      Object::const_get(tracker_conf['class']).new(tracker_conf)
+      klass = Insup::Tracker.find_tracker(tracker_conf['class']) || Object::const_get(tracker_conf['class'])
+      klass.new(tracker_conf)
     else
-      Tracker::SimpleTracker.new(tracker_conf)
+      Tracker::SimpleTracker.new({})
     end
   end
 
@@ -77,8 +79,8 @@ module Insup
   end
 
   def self.listen
-    listener = Listener.new(Dir.getwd, Settings.instance.tracked_locations,
-      Settings.instance.ignore_patterns)
+    puts 'Listening...'
+    listener = Listener.new(Dir.getwd)
 
     listener.listen do |changes|
       changes.each do |change|

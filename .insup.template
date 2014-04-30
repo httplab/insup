@@ -4,7 +4,7 @@ track:
   - templates
 
 tracker:
-  class: Insup::Tracker::GitTracker
+  class: git
 
 insales:
   subdomain:
@@ -12,7 +12,7 @@ insales:
   password:
 
 uploader:
-  class: Insup::Uploader::InsalesUploader
+  class: insales
   theme_id:
 
 ignore:

@@ -1,7 +1,16 @@
 require('match_files')
 class Insup::Tracker
 
-  def initialize(config = nil, ignore_patterns = nil)
+  def self.tracker(tracker_alias)
+    @@trackers ||= {}
+    @@trackers[tracker_alias] = self
+  end
+
+  def self.find_tracker(tracker_alias)
+    @@trackers[tracker_alias.to_sym]
+  end
+
+  def initialize(config = nil)
     @config = config
     @path = Dir.getwd
   end

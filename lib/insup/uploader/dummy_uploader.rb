@@ -2,6 +2,8 @@ require 'colorize'
 
 class Insup::Uploader::DummyUploader < Insup::Uploader
 
+  uploader :dummy
+
   def upload_file(file)
     case file.state
     when Insup::TrackedFile::NEW
