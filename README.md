@@ -1,4 +1,4 @@
-# insup
+# Insup
 
 [![Build Status](https://travis-ci.org/httplab/insup.svg?branch=master)](https://travis-ci.org/httplab/insup)
 [![Gem Version](https://badge.fury.io/rb/insup.svg)](http://badge.fury.io/rb/insup)
