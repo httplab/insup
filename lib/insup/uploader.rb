@@ -6,7 +6,7 @@ class Insup::Uploader
   end
 
   def self.find_uploader(uploader_alias)
-    @@uploader[uploader_alias.to_sym]
+    @@uploaders[uploader_alias.to_sym]
   end
 
   def initialize config = nil

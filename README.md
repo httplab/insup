@@ -52,7 +52,7 @@ Currently there are two uploaders available:
 
 #### Listen mode
 
-In this mode Insup will continuously listen to the changes in tracked locations and upload the changes immidiately. It will use the specified uploader, but the tracker is ignores. Listen mode will only watch files that do not match ignore patterns.
+In this mode Insup will continuously listen to the changes in tracked locations and upload the changes immidiately. It will use the specified uploader, but the tracker is ignored. Listen mode will only watch files that do not match ignore patterns.
 
 Activate listen mode by typing
 ```bash
