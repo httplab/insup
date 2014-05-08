@@ -56,6 +56,7 @@ class Insup::Uploader::InsalesUploader < Insup::Uploader
 
     if !asset
       upload_new_file(file)
+      return
     end
 
     puts "Updating #{file.path}".yellow
