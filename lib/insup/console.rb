@@ -22,7 +22,7 @@ module Insup::Console
   end
 
   def self.list_files(options = {})
-    @insup.files.each do |f|
+    @insup.files(options).each do |f|
       puts f
     end
   end

@@ -1,66 +1,80 @@
 #!/usr/bin/env ruby
 
-require 'trollop'
-
+require 'gli'
 require_relative '../lib/insup/version'
 require_relative '../lib/insup/console'
 
-SUB_COMMANDS = %w(init status config commit list-locations list-files listen insales)
+include GLI::App
 
-global_opts = Trollop::options do
-  version "insup #{Insup::VERSION} (c) 2014 nuinuhin@gmail.com"
-  banner <<-EOS
-Usage:
-       insup status
-       insup commit
-       insup config
-       insup list-files
-       insup listen
-       insup init
-       insup list-locations
-       insup insales list-themes
-EOS
-  stop_on SUB_COMMANDS
+program_desc 'Insup uploader'
+version Insup::VERSION
+flag [:c,:config], :default_value => '.insup'
+
+pre do |global_options, command, options, args|
+  settings_file = global_options[:config]
+  Insup::Console.start(settings_file)
 end
 
-cmd = ARGV.shift
-
-if !SUB_COMMANDS.include?(cmd)
-  puts "Available subcommands are #{SUB_COMMANDS.join(', ')}."
-  exit(1)
-end
-
-Insup::Console.start
-
-begin
-  case cmd
-  when 'status'
+desc 'Show current status of working directory according to the selected tracker'
+command :status do |c|
+  c.action do |global_options, options, args|
     Insup::Console.status
-  when 'config'
+  end
+end
+
+desc 'Print current config and exit'
+command :config do |c|
+  c.action do |global_options, options, args|
     Insup::Console.print_config
-  when 'list-locations'
+  end
+end
+
+desc 'Show tracked locations'
+command 'list-locations' do |c|
+  c.action do |global_options, options, args|
     Insup::Console.list_locations
-  when 'list-files'
-    if ARGV.include?('--all')
+  end
+end
+
+desc 'List files under tracked locations'
+command 'list-files' do |c|
+  c.switch [:a, :all], desc: 'List all files, including ignored ones', negatable: false
+  c.switch [:i, :ignored], desc: 'List only ignored files', negatable: false
+
+  c.action do |global_options, options, args|
+    if options[:all]
       Insup::Console.list_files(mode: :all)
-    elsif ARGV.include?('--ignored')
+    elsif options[:ignored]
       Insup::Console.list_files(mode: :ignored)
     else
       Insup::Console.list_files
     end
-  when 'commit'
-    Insup::Console.commit ARGV.map{|f| Insup::TrackedFile.new(f,Insup::TrackedFile::MODIFIED)}
-  when 'listen'
+  end
+end
+
+desc 'Apply changes to the remote storage'
+command :commit do |c|
+  c.action do |global_options, options, args|
+    Insup::Console.commit
+  end
+end
+
+desc 'Initialize listen mode'
+command :listen do |c|
+  c.action do |global_options, options, args|
     Insup::Console.listen
-  when 'init'
-    Insup::Console.init(ARGV[0])
-  when 'insales'
-    cmd = ARGV.shift
-    case cmd
-    when 'list-themes'
+  end
+end
+
+desc 'Tasks related to insales'
+command :insales do |c|
+  c.default_command 'list-themes'
+  c.desc 'List themes in the current Insales shop'
+  c.command 'list-themes' do |sc|
+    sc.action do |global_options, options, args|
       Insup::Console.insales_list_themes
     end
   end
-# rescue => ex
-#   puts ex.message
 end
+
+exit run(ARGV)
