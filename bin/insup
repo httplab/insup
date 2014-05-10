@@ -12,7 +12,7 @@ global_opts = Trollop::options do
   banner <<-EOS
 Usage:
        insup status
-       insup commit [file1, [file2, [...]]]
+       insup commit
        insup config
        insup list-files
        insup listen
@@ -25,12 +25,9 @@ end
 
 cmd = ARGV.shift
 
-if cmd.nil?
-  raise Trollop::HelpNeeded
-end
-
-if !SUB_COMMANDS.include? cmd
-  Trollop::die "unknown subcommand #{cmd.inspect}"
+if !SUB_COMMANDS.include?(cmd)
+  puts "Available subcommands are #{SUB_COMMANDS.join(', ')}."
+  exit(1)
 end
 
 Insup::Console.start
