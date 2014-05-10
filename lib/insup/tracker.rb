@@ -1,4 +1,4 @@
-require('match_files')
+require 'match_files'
 class Insup::Tracker
 
   def self.tracker(tracker_alias)
@@ -10,12 +10,12 @@ class Insup::Tracker
     @@trackers[tracker_alias.to_sym]
   end
 
-  def initialize(config = nil)
+  def initialize(base, config)
     @config = config
-    @path = Dir.getwd
+    @path = base
   end
 
-  # Lists ALL files in the tracked locations whether they are ignored or not
+  # Lists all files in the tracked locations whether they are ignored or not
   def all_files
     locations = tracked_locations
     locations.map do |loc|
@@ -25,12 +25,12 @@ class Insup::Tracker
     end.flatten
   end
 
-  # Lists ALL tracked files in the tracked locations i. e. all files but ignored
+  # Lists all tracked files in the tracked locations i. e. all files but ignored
   def tracked_files
     all_files.reject{|f| ignore_matcher.matched?(f)}
   end
 
-  # Lists ALL tracked files in the tracked locations i. e. all files but ignored
+  # Lists all tracked files in the tracked locations i. e. all files but ignored
   def ignored_files
     all_files.select{|f| ignore_matcher.matched?(f)}
   end
@@ -52,11 +52,11 @@ class Insup::Tracker
   end
 
   def tracked_locations
-    @track = ::Insup::Settings.instance.tracked_locations
+    @track = @config.tracked_locations
   end
 
   def ignore_patterns
-    @ignore_patterns ||= ::Insup::Settings.instance.ignore_patterns
+    @ignore_patterns ||= @config.ignore_patterns
   end
 
 end

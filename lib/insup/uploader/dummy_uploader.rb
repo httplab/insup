@@ -7,18 +7,30 @@ class Insup::Uploader::DummyUploader < Insup::Uploader
   def upload_file(file)
     case file.state
     when Insup::TrackedFile::NEW
-      puts "Creating file #{file.path}".green
+      changed
+      notify_observers(CREATING_FILE, file)
+      changed
+      notify_observers(CREATED_FILE, file)
     when Insup::TrackedFile::MODIFIED, Insup::TrackedFile::UNSURE
-      puts "Uploading file #{file.path}".yellow
+      changed
+      notify_observers(MODIFYING_FILE, file)
+      changed
+      notify_observers(MODIFIED_FILE, file)
     end
   end
 
   def remove_file file
-    puts "Deleting file #{file.path}".red
+    changed
+    notify_observers(DELETING_FILE, file)
+    changed
+    notify_observers(DELETED_FILE, file)
   end
 
   def batch_upload(files)
-    puts "Batch uploading #{files.count} files"
+    changed
+    notify_observers(BATCH_UPLOADING_FILE, file)
+    changed
+    notify_observers(BATCH_UPLOADED_FILE, file)
   end
 
 end

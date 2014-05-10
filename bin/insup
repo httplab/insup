@@ -3,7 +3,7 @@
 require 'trollop'
 
 require_relative '../lib/insup/version'
-require_relative '../lib/insup.rb'
+require_relative '../lib/insup/console'
 
 SUB_COMMANDS = %w(init status config commit list-locations list-files listen insales)
 
@@ -29,39 +29,41 @@ if cmd.nil?
   raise Trollop::HelpNeeded
 end
 
-if(!SUB_COMMANDS.include? cmd)
+if !SUB_COMMANDS.include? cmd
   Trollop::die "unknown subcommand #{cmd.inspect}"
 end
+
+Insup::Console.start
 
 begin
   case cmd
   when 'status'
-    Insup.status
+    Insup::Console.status
   when 'config'
-    Insup.print_config
+    Insup::Console.print_config
   when 'list-locations'
-    Insup.list_locations
+    Insup::Console.list_locations
   when 'list-files'
     if ARGV.include?('--all')
-      Insup.list_files(mode: :all)
+      Insup::Console.list_files(mode: :all)
     elsif ARGV.include?('--ignored')
-      Insup.list_files(mode: :ignored)
+      Insup::Console.list_files(mode: :ignored)
     else
-      Insup.list_files
+      Insup::Console.list_files
     end
   when 'commit'
-    Insup.commit ARGV.map{|f| Insup::TrackedFile.new(f,Insup::TrackedFile::MODIFIED)}
+    Insup::Console.commit ARGV.map{|f| Insup::TrackedFile.new(f,Insup::TrackedFile::MODIFIED)}
   when 'listen'
-    Insup.listen
+    Insup::Console.listen
   when 'init'
-    Insup.init(ARGV[0])
+    Insup::Console.init(ARGV[0])
   when 'insales'
     cmd = ARGV.shift
     case cmd
     when 'list-themes'
-      Insup::Insales.list_themes
+      Insup::Console.insales_list_themes
     end
   end
-rescue => ex
-  puts ex.message
+# rescue => ex
+#   puts ex.message
 end

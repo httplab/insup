@@ -2,8 +2,9 @@ require 'listen'
 
 class Listener
 
-  def initialize(base)
+  def initialize(base, settings)
     @base = base
+    @settings = settings
   end
 
   def listen(&block)
@@ -74,11 +75,11 @@ class Listener
   end
 
   def tracked_locations
-    @track = ::Insup::Settings.instance.tracked_locations
+    @track = @settings.tracked_locations
   end
 
   def ignore_patterns
-    @ignore_patterns ||= ::Insup::Settings.instance.ignore_patterns
+    @ignore_patterns = @settings.ignore_patterns
   end
 
 end

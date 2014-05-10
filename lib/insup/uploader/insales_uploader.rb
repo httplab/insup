@@ -7,9 +7,10 @@ class Insup::Uploader::InsalesUploader < Insup::Uploader
 
   InsalesUploaderError = Class.new(Insup::Exceptions::UploaderError)
 
-  def initialize(config)
+  def initialize(settings)
     super
-    Insup::Insales.configure_api
+    @insales = new Insup::Insales(settings)
+    @insales.configure_api
     assets_list(true)
   end
 
@@ -32,7 +33,8 @@ class Insup::Uploader::InsalesUploader < Insup::Uploader
       return
     end
 
-    puts "Creating #{file.path}".green
+    changed
+    notify_observers(CREATING_FILE, file)
     asset_type = get_asset_type(file.path)
 
     if(!asset_type)
@@ -49,6 +51,9 @@ class Insup::Uploader::InsalesUploader < Insup::Uploader
     })
 
     assets_list << asset
+
+    changed
+    notify_observers(CREATED_FILE, file)
   end
 
   def upload_modified_file(file)
@@ -59,7 +64,8 @@ class Insup::Uploader::InsalesUploader < Insup::Uploader
       return
     end
 
-    puts "Updating #{file.path}".yellow
+    changed
+    notify_observers(MODIFYING_FILE, file)
 
     file_contents = File.read(file.path)
 
@@ -69,6 +75,9 @@ class Insup::Uploader::InsalesUploader < Insup::Uploader
       remove_file(file)
       upload_new_file(file)
     end
+
+    changed
+    notify_observers(MODIFIED_FILE, file)
   end
 
   def remove_file(file)
@@ -78,9 +87,14 @@ class Insup::Uploader::InsalesUploader < Insup::Uploader
       raise InsalesUploaderError, "Cannot find remote counterpart for file #{file.path}"
     end
 
-    puts "Deleting #{file.path}".red
+    changed
+    notify_observers(DELETING_FILE, file)
+
     asset.destroy
     assets_list.delete(asset)
+
+    changed
+    notify_observers(DELETED_FILE, file)
   end
 
 private

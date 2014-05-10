@@ -1,3 +1,3 @@
-module Insup
+class Insup
   VERSION = '0.1.2'
 end
