@@ -72,9 +72,8 @@ insup status
 
 Upload changes
 ```bash
-insup commit [file1 [file2 [file3 [...]]]]
+insup commit
 ```
-Call `commit` command with the file list to upload only files specified.
 
 ### Other commands
 

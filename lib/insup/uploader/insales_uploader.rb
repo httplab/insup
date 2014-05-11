@@ -9,7 +9,7 @@ class Insup::Uploader::InsalesUploader < Insup::Uploader
 
   def initialize(settings)
     super
-    @insales = new Insup::Insales(settings)
+    @insales = Insup::Insales.new(settings)
     @insales.configure_api
     assets_list(true)
   end
@@ -46,7 +46,7 @@ class Insup::Uploader::InsalesUploader < Insup::Uploader
     asset = ::Insup::Insales::Asset.create({
       name: file.file_name,
       attachment: Base64.encode64(file_contents),
-      theme_id: @config['theme_id'],
+      theme_id: @config.uploader['theme_id'],
       type: asset_type
     })
 
@@ -118,7 +118,7 @@ private
   end
 
   def theme
-    @theme ||= ::Insup::Insales::Theme.find(@config['theme_id'])
+    @theme ||= ::Insup::Insales::Theme.find(@config.uploader['theme_id'])
   end
 
   def find_asset file
