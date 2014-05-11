@@ -7,12 +7,11 @@ module Insup::Console
     settings_file ||= '.insup'
     @settings = Insup::Settings.new(settings_file)
     @insup = Insup.new(Dir.getwd, @settings)
-    @insup.uploader.add_observer(Insup::Console::UploadObserver.new)
   end
 
   def self.init(directory = nil)
     directory ||= Dir.getwd
-    @insup.create_insup_file(directory)
+    Insup.create_insup_file(directory)
   end
 
   def self.list_locations
@@ -58,6 +57,7 @@ module Insup::Console
   end
 
   def self.listen
+    @insup.uploader.add_observer(Insup::Console::UploadObserver.new)
     puts 'Listening...'
     @insup.listen
     exit_requested = false
@@ -70,6 +70,11 @@ module Insup::Console
     puts 'Stopping listener...'
     @insup.stop_listening
     puts 'Terminated by user'
+  end
+
+  def self.commit
+    @insup.uploader.add_observer(Insup::Console::UploadObserver.new)
+    @insup.commit
   end
 
 end

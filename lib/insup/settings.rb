@@ -4,8 +4,12 @@ class Insup::Settings
   attr_reader :settings
 
   def initialize(filename = '.insup')
-    insupfile = IO.read(filename)
-    @settings = YAML.load(insupfile)
+    if File.exist?(filename)
+      insupfile = IO.read(filename)
+      @settings = YAML.load(insupfile)
+    else
+      @settings = {}
+    end
   end
 
   def tracked_locations

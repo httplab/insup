@@ -10,7 +10,7 @@ class Insup
   # Initializes a directory with a default .insup file
   def self.create_insup_file(dir = nil)
     dir ||= Dir.getwd
-    template_file = File.join(File.dirname(File.expand_path(__FILE__)), '../.insup.template')
+    template_file = File.join(File.dirname(File.expand_path(__FILE__)), '../insup.template')
     FileUtils.cp(template_file, File.join(dir, '.insup'))
   end
 

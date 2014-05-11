@@ -15,6 +15,14 @@ pre do |global_options, command, options, args|
   Insup::Console.start(settings_file)
 end
 
+desc 'Initialize the directory with insup file'
+arg_name 'directory', [:optional]
+command :init do |c|
+  c.action do |global_options, options, args|
+    Insup::Console.init(args[0])
+  end
+end
+
 desc 'Show current status of working directory according to the selected tracker'
 command :status do |c|
   c.action do |global_options, options, args|
