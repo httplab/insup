@@ -29,7 +29,7 @@ module Insup::Console
   def self.insales_list_themes
     theme_id = @settings.uploader['theme_id']
     @insup.insales.themes.each do |theme|
-      prefix = theme.id == theme_id ? '*' : ' '
+      prefix = theme.id == theme_id ? '=>' : '  '
       puts "#{prefix} #{theme.id}\t#{theme.title}"
     end
   end

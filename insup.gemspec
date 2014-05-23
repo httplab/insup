@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'colorize', '~> 0.7'
   s.add_dependency 'gli', '~> 2.10'
   s.add_dependency 'listen', '~> 2.7'
-  s.add_dependency 'match_files', '~> 0.1'
+  s.add_dependency 'match_files', '~> 0.2'
   s.add_dependency 'activeresource', '~> 4.0'
 
   s.files = `git ls-files`.split("\n")
