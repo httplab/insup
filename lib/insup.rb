@@ -58,7 +58,7 @@ class Insup
       klass = Insup::Uploader.find_uploader(uploader_conf['class']) || Object::const_get(uploader_conf['class'])
       klass.new(@settings)
     else
-      Uploader::Dummy.new(@settings)
+      Uploader::DummyUploader.new(@settings)
     end
   end
 

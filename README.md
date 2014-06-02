@@ -45,9 +45,9 @@ Currently there are two trackers available:
 
 Currently there are two uploaders available:
 
-* **Insales uploader** will upload files to the specified Insales theme. Specify `Insup::Uploader::Insales` or `insales` in the `class` section of the uploader configuration. Insales uploader also requires `theme_id` to be specified. Working directory should include 3 subfolders *media*, *snippets* and *templates*. The same 3 folders should be specified in the `track` sectio of .insup file.
+* **Insales uploader** will upload files to the specified Insales theme. Specify `Insup::Uploader::InsalesUploader` or `insales` in the `class` section of the uploader configuration. Insales uploader also requires `theme_id` to be specified. Working directory should include 3 subfolders *media*, *snippets* and *templates*. The same 3 folders should be specified in the `track` sectio of .insup file.
 
-* **Dummy uploader** will only print its operations to the console without actually uploading anything. It can be used for testing the configuration. Use by specifying `dummy` or `Insup::Uploader::Dummy` in the `class` section.
+* **Dummy uploader** will only print its operations to the console without actually uploading anything. It can be used for testing the configuration. Use by specifying `dummy` or `Insup::Uploader::DummyUploader` in the `class` section.
 
 ### Operation modes
 
