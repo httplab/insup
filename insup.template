@@ -32,7 +32,7 @@ ignore:
 # Logging settings
 #   file: Path to the log file relative to the working directory
 #   level: Log error level. Available options are 'unknown', 'debug', 'error', 'fatal', 'info',
-№         'unknown' and 'warn'
+#          and 'warn'
 #   pattern: A pattern to for logger to use when writing messages. Available substitutions are:
 #            %{timestamp}, %{level} and %{message}
 #

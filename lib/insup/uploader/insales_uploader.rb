@@ -42,21 +42,26 @@ class Insup::Uploader::InsalesUploader < Insup::Uploader
     notify_observers(CREATING_FILE, file)
     asset_type = get_asset_type(file.path)
 
-    if(!asset_type)
+    if !asset_type
       raise InsalesUploaderError, "Cannot determine asset type for file #{file.path}"
     end
 
     file_contents = File.read(file.path)
 
-    asset = ::Insup::Insales::Asset.create({
+    hash = {
       name: file.file_name,
-      attachment: Base64.encode64(file_contents),
       theme_id: @config.uploader['theme_id'],
       type: asset_type
-    })
+    }
 
+    if ['Asset::Snippet', 'Asset::Template'].include?(asset_type)
+      hash[:content] = file_contents
+    else
+      hash[:attachment] = Base64.encode64(file_contents)
+    end
+
+    asset = ::Insup::Insales::Asset.new(hash)
     assets_list << asset
-
     changed
     notify_observers(CREATED_FILE, file)
   end
@@ -75,7 +80,10 @@ class Insup::Uploader::InsalesUploader < Insup::Uploader
     file_contents = File.read(file.path)
 
     if asset.content_type.start_with? 'text/'
-      asset.update_attribute(:content, file_contents)
+      res = asset.update_attribute(:content, file_contents)
+      if !res
+        process_error(asset, file)
+      end
     else
       remove_file(file)
       upload_new_file(file)
@@ -95,8 +103,9 @@ class Insup::Uploader::InsalesUploader < Insup::Uploader
     changed
     notify_observers(DELETING_FILE, file)
 
-    asset.destroy
-    assets_list.delete(asset)
+    if pd=asset.destroy
+      assets_list.delete(asset)
+    end
 
     changed
     notify_observers(DELETED_FILE, file)
@@ -108,6 +117,14 @@ private
     'snippets/' => 'Asset::Snippet',
     'templates/' => 'Asset::Template'
   }.freeze
+
+  def process_error(entity, file)
+    changed
+    entity.errors.full_messages.each do |err|
+      Insup.logger.error(err)
+      notify_observers(ERROR, file, err)
+    end
+  end
 
   def get_asset_type path
     res = nil

@@ -42,7 +42,10 @@ class Insup
     if files.nil? || files.empty?
       list = changes
     else
-      list = files.map{|f| TrackedFile.new(f, TrackedFile::MODIFIED)}
+      list = files.map do |f|
+        mode = File.exist?(f) ? TrackedFile::MODIFIED : TrackedFile::DELETED
+        TrackedFile.new(f, mode)
+      end
     end
 
     list.each do |file|

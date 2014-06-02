@@ -71,6 +71,7 @@ command 'list-files' do |c|
 end
 
 desc 'Apply changes to the remote storage'
+arg_name 'file', [:optional, :multiple]
 command :commit do |c|
   c.action do |global_options, options, args|
     Insup::Console.commit(args)
@@ -94,5 +95,7 @@ command :insales do |c|
     end
   end
 end
+
+default_command :listen
 
 exit run(ARGV)

@@ -23,7 +23,7 @@ module Insup::Console
       @logger = Logger.new(settings.log_file)
     end
 
-    @logger.level = @debug ? Logger::Debug : settings.log_level
+    @logger.level = @debug ? Logger::DEBUG : settings.log_level
     @logger.formatter = proc do |severity, datetime, progname, msg|
 
       format_string = settings.log_pattern
@@ -32,12 +32,12 @@ module Insup::Console
         timestamp: datetime
       }
 
-      if msg.is_a? String
-        values_hash[:message] = msg
-        values_hash[:backtrace] = nil
-      elsif msg.is_a? Exception
+      if msg.is_a? Exception
         values_hash[:message] = msg.message
         values_hash[:backtrace] = "\n#{msg.backtrace.join("\n")}"
+      else
+        values_hash[:message] = msg.to_s
+        values_hash[:backtrace] = nil
       end
 
       format_string % values_hash

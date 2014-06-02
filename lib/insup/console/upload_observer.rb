@@ -12,6 +12,9 @@ class Insup::Console::UploadObserver
       puts "Uploading file #{file.path}...".yellow
     when Insup::Uploader::DELETING_FILE
       puts "Deleting file #{file.path}...".red
+    when Insup::Uploader::ERROR
+      message = args[1]
+      puts "Error in #{file.path}: #{message}".red
     end
   end
 end
