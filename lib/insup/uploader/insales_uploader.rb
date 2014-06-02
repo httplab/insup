@@ -11,6 +11,11 @@ class Insup::Uploader::InsalesUploader < Insup::Uploader
     super
     @insales = Insup::Insales.new(settings)
     @insales.configure_api
+
+    if !theme
+      raise Insup::Exceptions::UploaderError, "Theme #{theme_id} is not found in the Insales shop"
+    end
+
     assets_list(true)
   end
 
@@ -118,7 +123,15 @@ private
   end
 
   def theme
-    @theme ||= ::Insup::Insales::Theme.find(@config.uploader['theme_id'])
+    @theme ||= themes[theme_id]
+  end
+
+  def theme_id
+    @config.uploader['theme_id']
+  end
+
+  def themes
+    @themes ||= Hash[@insales.themes.map{|t| [t.id, t]}]
   end
 
   def find_asset file
