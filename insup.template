@@ -4,9 +4,15 @@ track:
   - snippets
   - templates
 
+# Tracker settings
+#   class: tracker class. Use 'git' or 'simple'
 tracker:
   class: git
 
+# Insales settings
+# subdomain: your Insales subdomain, e.g. my-shop.myinsales.ru
+# api_key: Insales API key for insup application
+# password: Insales API passeword for insup application
 insales:
   subdomain:
   api_key:
@@ -14,6 +20,7 @@ insales:
 
 # Uploader settings
 #   class: uploader class. Use 'insales' or 'dummy'
+#   theme_id: Insales theme ID
 uploader:
   class: insales
   theme_id:
@@ -30,14 +37,14 @@ ignore:
   - '*.log'
 
 # Logging settings
-#   file: Path to the log file relative to the working directory
-#   level: Log error level. Available options are 'unknown', 'debug', 'error', 'fatal', 'info',
-#          and 'warn'
-#   pattern: A pattern to for logger to use when writing messages. Available substitutions are:
-#            %{timestamp}, %{level} and %{message}
+#   file: path to the log file relative to the working directory. Omit this key to use STDERR instead
+#         of file.
+#   level: log error level. Available options are 'unknown', 'debug', 'error', 'fatal', 'info',
+#          and 'warn'.
+#   pattern: a pattern to for logger to use when writing messages. Available substitutions are:
+#            %{timestamp}, %{level}, %{message} and %{backtrace}.
 #
-
 log:
   file: 'log/insup.log'
   level: 'info'
-  pattern: "%{timestamp} - %{level}\t: %{message}\n"
+  pattern: "%{timestamp} - %{level}\t: %{message} %{backtrace}\n"
