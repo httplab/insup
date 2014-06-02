@@ -38,9 +38,15 @@ class Insup
     end
   end
 
-  def commit
-    changes.each do |change|
-      uploader.process_file(change)
+  def commit(files = nil)
+    if files.nil? || files.empty?
+      list = changes
+    else
+      list = files.map{|f| TrackedFile.new(f, TrackedFile::MODIFIED)}
+    end
+
+    list.each do |file|
+      uploader.process_file(file)
     end
   end
 

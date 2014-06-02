@@ -73,7 +73,7 @@ end
 desc 'Apply changes to the remote storage'
 command :commit do |c|
   c.action do |global_options, options, args|
-    Insup::Console.commit
+    Insup::Console.commit(args)
   end
 end
 

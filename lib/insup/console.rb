@@ -109,9 +109,9 @@ module Insup::Console
     puts 'Terminated by user'
   end
 
-  def self.commit
+  def self.commit(args)
     @insup.uploader.add_observer(Insup::Console::UploadObserver.new)
-    @insup.commit
+    @insup.commit(args)
   end
 
   def self.process_error(exception)
