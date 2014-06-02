@@ -78,6 +78,11 @@ Upload changes
 ```bash
 insup commit
 ```
+You can also specify particlular files with the `commit` command:
+```bash
+insup commit [file1 [file2 [file3 [...]]]]
+```
+In this case **tracking info is ignored** and each file specified is treated as modified or deleted (if it doesn't actually exist).
 
 ### Other commands
 List all themes in the Insales shop if `insales` section is given in the .insup file:
