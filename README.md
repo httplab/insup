@@ -97,7 +97,6 @@ To see a full list of commands available, type:
 insup --help
 ```
 To see help message on the specific command, type:
-Type
 ```bash
 insup <command> --help
 ```
