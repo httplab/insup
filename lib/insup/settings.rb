@@ -1,4 +1,5 @@
 require 'yaml'
+require 'logger'
 
 class Insup::Settings
   attr_reader :settings
@@ -42,6 +43,16 @@ class Insup::Settings
 
   def log_level
     level = log['level'] || 'info'
+    level = "Logger::#{level.upcase}"
+    Kernel.const_get(level)
+  end
+
+  def log_pattern
+    log['pattern'] || "%{message}\n"
+  end
+
+  def log_file
+    log['file']
   end
 
   def save(filename)

@@ -1,3 +1,4 @@
+# Tracked locations. List all subdirectories of the working directory you want Insup to track
 track:
   - media
   - snippets
@@ -11,13 +12,32 @@ insales:
   api_key:
   password:
 
+# Uploader settings
+#   class: uploader class. Use 'insales' or 'dummy'
 uploader:
   class: insales
   theme_id:
 
+# Ignore patterns
+# Insup ignore patterns follow the same rules as Git ignore. Remember that the patterns
+# are considered to be relative to the working directory, not to the tracked locations.
 ignore:
   - '*.swp'
   - '*.swx'
   - '.*'
   - 'thumbs.db'
   - '.DS_Store'
+  - '*.log'
+
+# Logging settings
+#   file: Path to the log file relative to the working directory
+#   level: Log error level. Available options are 'unknown', 'debug', 'error', 'fatal', 'info',
+№         'unknown' and 'warn'
+#   pattern: A pattern to for logger to use when writing messages. Available substitutions are:
+#            %{timestamp}, %{level} and %{message}
+#
+
+log:
+  file: 'log/insup.log'
+  level: 'info'
+  pattern: "%{timestamp} - %{level}\t: %{message}\n"

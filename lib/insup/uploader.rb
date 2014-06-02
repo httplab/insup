@@ -11,6 +11,7 @@ class Insup::Uploader
   DELETED_FILE = 5
   BATCH_UPLOADING_FILES = 6
   BATCH_UPLOADED_FILES = 7
+  ERROR = 8
 
   def self.uploader(uploader_alias)
     @@uploaders ||= {}

@@ -2,6 +2,15 @@ require 'fileutils'
 
 class Insup
 
+  def self.logger=(val)
+    @logger = val
+    Insup::Insales.logger = @logger
+  end
+
+  def self.logger
+    @logger
+  end
+
   def initialize(base, settings)
     @settings = settings
     @base = base

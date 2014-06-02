@@ -4,11 +4,16 @@ class Insup::Insales
     @settings = settings
   end
 
+  def self.logger=(val)
+    ActiveResource::Base.logger = val
+  end
+
+  def self.logger
+    ActiveResource::Base.logger
+  end
+
   def configure_api
     if !@has_api
-      # active_resource_logger = Logger.new('log/active_resource.log', 'daily')
-      # active_resource_logger.level = Logger::DEBUG
-      # ActiveResource::Base.logger = active_resource_logger
       @has_api = ::Insup::Insales::Base.configure(config['api_key'], config['subdomain'], config['password'])
     end
   end

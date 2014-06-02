@@ -8,11 +8,21 @@ include GLI::App
 
 program_desc 'Insup uploader'
 version Insup::VERSION
-flag [:c,:config], :default_value => '.insup'
+flag [:c,:config], default_value: '.insup'
+switch [:v,:verbose], desc: 'Be verbose'
+switch [:d, :debug], desc: 'Dump debug information upon error'
 
 pre do |global_options, command, options, args|
   settings_file = global_options[:config]
-  Insup::Console.start(settings_file)
+  verbose = global_options[:verbose]
+  debug = global_options[:debug]
+  ENV['GLI_DEBUG'] = 'true' if debug
+  Insup::Console.start(settings_file, verbose, debug)
+end
+
+on_error do |ex|
+  Insup::Console.process_error(ex)
+  false
 end
 
 desc 'Initialize the directory with insup file'

@@ -1,12 +1,49 @@
 require 'colorize'
+require 'fileutils'
 require_relative '../insup'
 
 module Insup::Console
 
-  def self.start(settings_file = nil)
+  def self.start(settings_file = nil, verbose = false, debug = false)
     settings_file ||= '.insup'
     @settings = Insup::Settings.new(settings_file)
     @insup = Insup.new(Dir.getwd, @settings)
+    @verbose = verbose
+    @debug = debug
+    self.init_log(@settings)
+    true
+  end
+
+  def self.init_log(settings)
+    if settings.log_file.nil? || settings.log_file.empty?
+      @logger = Logger.new($stdout)
+    else
+      log_dir = File.dirname(settings.log_file)
+      FileUtils.mkdir_p(log_dir) if !Dir.exist?(log_dir)
+      @logger = Logger.new(settings.log_file)
+    end
+
+    @logger.level = @debug ? Logger::Debug : settings.log_level
+    @logger.formatter = proc do |severity, datetime, progname, msg|
+
+      format_string = settings.log_pattern
+      values_hash = {
+        level: severity,
+        timestamp: datetime
+      }
+
+      if msg.is_a? String
+        values_hash[:message] = msg
+        values_hash[:backtrace] = nil
+      elsif msg.is_a? Exception
+        values_hash[:message] = msg.message
+        values_hash[:backtrace] = "\n#{msg.backtrace.join("\n")}"
+      end
+
+      format_string % values_hash
+    end
+
+    Insup.logger = @logger
   end
 
   def self.init(directory = nil)
@@ -75,6 +112,24 @@ module Insup::Console
   def self.commit
     @insup.uploader.add_observer(Insup::Console::UploadObserver.new)
     @insup.commit
+  end
+
+  def self.process_error(exception)
+    if exception.is_a? Insup::Exceptions::UploaderError
+      $stderr.puts "UploaderError: #{exception.message}".red
+    else
+      $stderr.puts "Error: #{exception.message}".red
+    end
+
+    if @debug
+      $stderr.puts exception.backtrace
+    end
+
+    begin
+      @logger.error(exception) if @logger
+    rescue
+      $stderr.puts "Unable to log error because the logger is not properly configured"
+    end
   end
 
 end
