@@ -4,7 +4,7 @@
 [![Gem Version](https://badge.fury.io/rb/insup.svg)](http://badge.fury.io/rb/insup)
 [![Coverage Status](https://coveralls.io/repos/httplab/insup/badge.png)](https://coveralls.io/r/httplab/insup)
 [![Code Climate](https://codeclimate.com/github/httplab/insup.png)](https://codeclimate.com/github/httplab/insup)
-[![Dependency Status](https://gemnasium.com/httplab/insup.svg)](https://gemnasiurm.com/httplab/insup)
+[![Dependency Status](https://gemnasium.com/httplab/insup.svg)](https://gemnasium.com/httplab/insup)
 
 ## Description
 
