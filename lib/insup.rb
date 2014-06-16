@@ -81,10 +81,13 @@ class Insup
 
   def listen
     @listener = Listener.new(@base, @settings)
-
     @listener.listen do |changes|
-      changes.each do |change|
-        uploader.process_file(change)
+      begin
+        changes.each do |change|
+          uploader.process_file(change)
+        end
+      rescue Exceptions::RecoverableUploaderError => ex
+        logger.error(ex)
       end
     end
   end

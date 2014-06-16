@@ -5,15 +5,13 @@ class Insup::Uploader::InsalesUploader < Insup::Uploader
 
   uploader :insales
 
-  InsalesUploaderError = Class.new(Insup::Exceptions::UploaderError)
-
   def initialize(settings)
     super
     @insales = Insup::Insales.new(settings)
     @insales.configure_api
 
     if !theme
-      raise Insup::Exceptions::UploaderError, "Theme #{theme_id} is not found in the Insales shop"
+      fail Insup::Exceptions::FatalUploaderError, "Theme #{theme_id} is not found in the Insales shop"
     end
 
     assets_list(true)
@@ -43,7 +41,9 @@ class Insup::Uploader::InsalesUploader < Insup::Uploader
     asset_type = get_asset_type(file.path)
 
     if !asset_type
-      raise InsalesUploaderError, "Cannot determine asset type for file #{file.path}"
+      msg = "Cannot determine asset type for file #{file.path}"
+      notify_observers(ERROR, file, msg)
+      raise Insup::Exceptions::RecoverableUploaderError, msg
     end
 
     file_contents = File.read(file.path)
@@ -97,7 +97,9 @@ class Insup::Uploader::InsalesUploader < Insup::Uploader
     asset = find_asset(file)
 
     if !asset
-      raise InsalesUploaderError, "Cannot find remote counterpart for file #{file.path}"
+      msg = "Cannot find remote counterpart for file #{file.path}"
+      notify_observers(ERROR, file, msg)
+      raise Insup::Exceptions::RecoverableUploaderError, "Cannot find remote counterpart for file #{file.path}"
     end
 
     changed
@@ -151,11 +153,13 @@ private
     @themes ||= Hash[@insales.themes.map{|t| [t.id, t]}]
   end
 
-  def find_asset file
+  def find_asset(file)
     asset_type = get_asset_type(file.path)
 
-    if(!asset_type)
-      raise InsalesUploaderError, "Cannot determine asset type for file #{file.path}"
+    if !asset_type
+      msg = "Cannot determine asset type for file #{file.path}"
+      notify_observers(ERROR, file, msg)
+      raise Insup::Exceptions::RecoverableUploaderError, "Cannot determine asset type for file #{file.path}"
     end
 
     files = assets_list.select  do |el|

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    insup (0.1.2)
+    insup (0.2)
       activeresource (~> 4.0)
       colorize (~> 0.7)
       gli (~> 2.10)

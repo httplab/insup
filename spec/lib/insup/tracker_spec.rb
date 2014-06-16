@@ -1,9 +1,9 @@
 require_relative '../../spec_helper'
 
-describe 'Insup::Tracker' do
+describe Insup::Tracker do
 
   before(:each) do
-    @tracker = Insup::Tracker.new()
+    @tracker = described_class.new()
   end
 
 end

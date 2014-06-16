@@ -1,8 +1,8 @@
 require_relative '../../spec_helper'
 
-describe 'Insup::Settings' do
+describe Insup::Settings do
   before(:each) do
-    @settings = Insup::Settings.new('spec/support/.insup')
+    @settings = described_class.new('spec/support/.insup')
   end
 
   it 'should have correct tracked locations' do
