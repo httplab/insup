@@ -114,31 +114,12 @@ class Insup::Uploader::InsalesUploader < Insup::Uploader
   end
 
 private
-  ASSET_TYPE_MAP = {
-    'media/' => 'Asset::Media',
-    'snippets/' => 'Asset::Snippet',
-    'templates/' => 'Asset::Template'
-  }.freeze
-
   def process_error(entity, file)
     changed
     entity.errors.full_messages.each do |err|
       Insup.logger.error(err)
       notify_observers(ERROR, file, err)
     end
-  end
-
-  def get_asset_type path
-    res = nil
-
-    ASSET_TYPE_MAP.each do |k,v|
-      if path.start_with? k
-        res = v
-        break
-      end
-    end
-
-    res
   end
 
   def theme
@@ -154,7 +135,7 @@ private
   end
 
   def find_asset(file)
-    asset_type = get_asset_type(file.path)
+    asset_type = ::Insup::Insales.get_asset_type(file.path)
 
     if !asset_type
       msg = "Cannot determine asset type for file #{file.path}"

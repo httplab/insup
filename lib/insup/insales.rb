@@ -1,5 +1,7 @@
 class Insup::Insales
 
+
+
   def initialize(settings)
     @settings = settings
   end
@@ -10,6 +12,19 @@ class Insup::Insales
 
   def self.logger
     ActiveResource::Base.logger
+  end
+
+  def self.get_asset_type(path)
+    res = nil
+
+    Asset::TYPE_MAP.each do |k,v|
+      if path.start_with? k
+        res = v
+        break
+      end
+    end
+
+    res
   end
 
   def configure_api
@@ -28,6 +43,33 @@ class Insup::Insales
   end
 
   def print_config
+
+  end
+
+  def download_theme(theme_id, dir, force, &blck)
+    configure_api
+    theme = Theme.find(theme_id)
+
+    theme.assets.each do |asset|
+      next if !asset.dirname
+      puts asset.path
+      path = File.join(dir, asset.path)
+
+      if !File.exist?(path)
+        w = asset.get
+        File.open(path, 'wb') do |f|
+          f.write(asset.data)
+        end
+      else
+        if force || (block_given? && blck.call(asset))
+          File.delete(path)
+          w = asset.get
+          File.open(path, 'wb') do |f|
+            f.write(asset.data)
+          end
+        end
+      end
+    end
 
   end
 end

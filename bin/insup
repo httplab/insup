@@ -85,13 +85,22 @@ command :listen do |c|
   end
 end
 
-desc 'Tasks related to insales'
+desc 'Tasks related to Insales'
 command :insales do |c|
   c.default_command 'list-themes'
   c.desc 'List themes in the current Insales shop'
   c.command 'list-themes' do |sc|
     sc.action do |global_options, options, args|
       Insup::Console.insales_list_themes
+    end
+  end
+
+  c.desc 'Download theme files to current directory'
+  c.command 'download' do |sc|
+    sc.switch [:f, :force], desc: 'Overwrite existing files without prompt'
+    sc.flag [:t, :theme], desc: 'Insales theme id', default_value: nil
+    sc.action do |global_options, options, args|
+      Insup::Console.insales_download_theme(options[:force], options[:theme])
     end
   end
 end

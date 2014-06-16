@@ -1,5 +1,6 @@
 require 'colorize'
 require 'fileutils'
+require 'io/console'
 require_relative '../insup'
 
 module Insup::Console
@@ -68,6 +69,28 @@ module Insup::Console
     @insup.insales.themes.each do |theme|
       prefix = theme.id == theme_id ? '=>' : '  '
       puts "#{prefix} #{theme.id}\t#{theme.title}"
+    end
+  end
+
+  def self.insales_download_theme(force = false, theme_id = nil)
+    theme_id ||= @settings.uploader['theme_id']
+    all = false
+    @insup.insales.download_theme(theme_id, Dir.getwd, force) do |asset|
+      response = nil
+      while !response || all do
+        puts "Asset #{asset.path} already exists. Overwrite? y/n/A"
+        response = STDIN.getch
+        if response == 'y'
+          true
+        elsif response == 'n'
+          false
+        elsif response == 'A'
+          all = true
+          true
+        else
+          response = nil
+        end
+      end
     end
   end
 
