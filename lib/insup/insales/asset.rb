@@ -8,7 +8,8 @@ class Insup::Insales::Asset < Insup::Insales::Base
   TYPE_MAP = {
     'media' => 'Asset::Media',
     'snippets' => 'Asset::Snippet',
-    'templates' => 'Asset::Template'
+    'templates' => 'Asset::Template',
+    'config' => 'Asset::Configuration' 
   }.freeze
 
   def filename
@@ -22,6 +23,15 @@ class Insup::Insales::Asset < Insup::Insales::Base
     end
   end
 
+  def self.get_type(path)
+    Asset::TYPE_MAP.each do |k,v|
+      if path.start_with?("#{k}/")
+        res = v
+        break
+      end
+    end  
+  end
+
   def dirname
     TYPE_MAP.invert[type]
   end
@@ -31,7 +41,8 @@ class Insup::Insales::Asset < Insup::Insales::Base
   end
 
   def data
-    content || Base64.decode64(attachment)
+    return content if respond_to?(:content)
+    return Base64.decode64(attachment) if respond_to?(:attachment)
   end
 
   def theme_id

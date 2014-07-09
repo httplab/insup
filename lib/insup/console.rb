@@ -74,24 +74,24 @@ module Insup::Console
 
   def self.insales_download_theme(force = false, theme_id = nil)
     theme_id ||= @settings.uploader['theme_id']
-    all = false
-    @insup.insales.download_theme(theme_id, Dir.getwd, force) do |asset|
-      response = nil
-      while !response || all do
-        puts "Asset #{asset.path} already exists. Overwrite? y/n/A"
-        response = STDIN.getch
-        if response == 'y'
-          true
-        elsif response == 'n'
-          false
-        elsif response == 'A'
-          all = true
-          true
+    @insup.insales.download_theme(theme_id, Dir.getwd) do |asset, exists|
+      if exists && !force
+        puts "#{asset.path} already exists"
+        false
+      else
+        if exists
+          puts "Overwriting #{asset.path}"
         else
-          response = nil
+          puts "Downloading #{asset.path}"
         end
+        true
       end
     end
+  end
+
+  def self.insales_download_theme_zip(force = false, theme_id = nil)
+    theme_id ||= @settings.uploader['theme_id']
+    @insup.insales.download_theme_zip(theme_id)
   end
 
   def self.status

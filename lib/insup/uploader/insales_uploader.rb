@@ -2,7 +2,6 @@ require 'base64'
 require_relative '../insales'
 
 class Insup::Uploader::InsalesUploader < Insup::Uploader
-
   uploader :insales
 
   def initialize(settings)
@@ -38,7 +37,7 @@ class Insup::Uploader::InsalesUploader < Insup::Uploader
 
     changed
     notify_observers(CREATING_FILE, file)
-    asset_type = get_asset_type(file.path)
+    asset_type = ::Insup::Insales::Asset.get_type(file.path)
 
     if !asset_type
       msg = "Cannot determine asset type for file #{file.path}"
@@ -135,7 +134,7 @@ private
   end
 
   def find_asset(file)
-    asset_type = ::Insup::Insales.get_asset_type(file.path)
+    asset_type = ::Insup::Insales::Asset.get_type(file.path)
 
     if !asset_type
       msg = "Cannot determine asset type for file #{file.path}"

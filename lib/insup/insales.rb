@@ -1,7 +1,7 @@
+require 'net/http'
+require 'json'
+
 class Insup::Insales
-
-
-
   def initialize(settings)
     @settings = settings
   end
@@ -12,19 +12,6 @@ class Insup::Insales
 
   def self.logger
     ActiveResource::Base.logger
-  end
-
-  def self.get_asset_type(path)
-    res = nil
-
-    Asset::TYPE_MAP.each do |k,v|
-      if path.start_with? k
-        res = v
-        break
-      end
-    end
-
-    res
   end
 
   def configure_api
@@ -46,31 +33,63 @@ class Insup::Insales
 
   end
 
-  def download_theme(theme_id, dir, force, &blck)
+  def download_theme(theme_id, dir)
     configure_api
     theme = Theme.find(theme_id)
 
     theme.assets.each do |asset|
       next if !asset.dirname
-      puts asset.path
       path = File.join(dir, asset.path)
-
-      if !File.exist?(path)
+      exists = File.exist?(path)
+      write = !exists
+      write = yield(asset, exists) if block_given?
+      
+      if write
+        File.delete(path) if exists
         w = asset.get
-        File.open(path, 'wb') do |f|
-          f.write(asset.data)
-        end
-      else
-        if force || (block_given? && blck.call(asset))
-          File.delete(path)
-          w = asset.get
-          File.open(path, 'wb') do |f|
-            f.write(asset.data)
-          end
-        end
+        Dir.mkdir(File.dirname(path)) if !Dir.exist?(File.dirname(path))
+        File.open(path, 'wb'){|f| f.write(w.data)}
       end
     end
+  end
 
+  def download_theme_zip(theme_id)
+    puts 'Requesting bundle'
+    opts = request_bundle(theme_id)
+    puts "Bundle requested, job ID is #{opts['job_id']}"
+    begin
+      puts 'Check Job'
+      status = check_job_status(opts['job_id'], :export, opts['secret'], theme_id)
+      if status['status'] != 'ok'
+        puts 'Not ready'
+      end
+    end until status['status'] == 'ok'
+
+    puts 'Obtaining ZIP'
+    res = perform_request(status['zip'])
+    puts res
+  end
+
+  def check_job_status(job_id, operation, secret, theme_id)
+    res = perform_request("/admin/bundles/check_status?job_id=#{job_id}&operation=#{operation}&secret=#{secret}&theme_id=#{theme_id}")
+    JSON.parse(res.body)
+  end
+
+  def request_bundle(theme_id)
+    res = perform_request("/admin/bundles/#{theme_id}.json")
+    JSON.parse(res.body)
+  end
+
+  protected
+
+  def perform_request(path)
+    req = Net::HTTP::Get.new(path)
+    req.basic_auth(config['api_key'], config['password'])
+    req['Accept'] = 'application/json'
+
+    res = Net::HTTP.start(config['subdomain'], 80) do |http|
+      http.request(req)
+    end
   end
 end
 
