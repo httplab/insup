@@ -20,7 +20,8 @@ class Insup
   def self.create_insup_file(dir = nil)
     dir ||= Dir.getwd
     template_file = File.join(File.dirname(File.expand_path(__FILE__)), '../insup.template')
-    FileUtils.cp(template_file, File.join(dir, '.insup'))
+    path = File.join(dir, '.insup')
+    FileUtils.cp(template_file, path) if !File.exist?(path)
   end
 
   def tracked_locations
