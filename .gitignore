@@ -3,6 +3,7 @@ vendor/bundle
 .bundle
 .irb-history
 .insup
+*.swp
 log
 
 /.tags*
