@@ -59,7 +59,7 @@ class Insup::Uploader::InsalesUploader < Insup::Uploader
       hash[:attachment] = Base64.encode64(file_contents)
     end
 
-    asset = ::Insup::Insales::Asset.new(hash)
+    asset = ::Insup::Insales::Asset.create(hash)
     assets_list << asset
     changed
     notify_observers(CREATED_FILE, file)
