@@ -41,6 +41,7 @@ class Insup::Uploader::InsalesUploader < Insup::Uploader
 
     if !asset_type
       msg = "Cannot determine asset type for file #{file.path}"
+      changed
       notify_observers(ERROR, file, msg)
       raise Insup::Exceptions::RecoverableUploaderError, msg
     end
@@ -59,10 +60,16 @@ class Insup::Uploader::InsalesUploader < Insup::Uploader
       hash[:attachment] = Base64.encode64(file_contents)
     end
 
-    asset = ::Insup::Insales::Asset.create(hash)
-    assets_list << asset
-    changed
-    notify_observers(CREATED_FILE, file)
+    begin
+      asset = ::Insup::Insales::Asset.create(hash)
+      assets_list << asset
+      changed
+      notify_observers(CREATED_FILE, file)
+    rescue ActiveResource::ServerError => ex
+      changed
+      notify_observers(ERROR, file, ex.message)
+      raise Insup::Exceptions::RecoverableUploaderError, "Server error occured when creating file #{file.path}"
+    end
   end
 
   def upload_modified_file(file)
@@ -75,28 +82,36 @@ class Insup::Uploader::InsalesUploader < Insup::Uploader
 
     changed
     notify_observers(MODIFYING_FILE, file)
-
     file_contents = File.read(file.path)
 
     if asset.content_type.start_with? 'text/'
-      res = asset.update_attribute(:content, file_contents)
-      if !res
-        process_error(asset, file)
+      begin
+        res = asset.update_attribute(:content, file_contents)
+
+        if !res
+          process_error(asset, file)
+          return
+        end
+
+        changed
+        notify_observers(MODIFIED_FILE, file)
+      rescue ActiveResource::ServerError => ex
+        changed
+        notify_observers(ERROR, file, ex.message)
+        raise Insup::Exceptions::RecoverableUploaderError, "Server error occured when updating file #{file.path}"
       end
     else
       remove_file(file)
       upload_new_file(file)
     end
-
-    changed
-    notify_observers(MODIFIED_FILE, file)
   end
 
   def remove_file(file)
     asset = find_asset(file)
-
+    
     if !asset
       msg = "Cannot find remote counterpart for file #{file.path}"
+      changed
       notify_observers(ERROR, file, msg)
       raise Insup::Exceptions::RecoverableUploaderError, "Cannot find remote counterpart for file #{file.path}"
     end
@@ -104,12 +119,17 @@ class Insup::Uploader::InsalesUploader < Insup::Uploader
     changed
     notify_observers(DELETING_FILE, file)
 
-    if pd=asset.destroy
-      assets_list.delete(asset)
+    begin
+      if asset.destroy
+        assets_list.delete(asset)
+        changed
+        notify_observers(DELETED_FILE, file)
+      end
+    rescue ActiveResource::ServerError => ex
+      changed
+      notify_observers(ERROR, file, ex.message)
+      raise Insup::Exceptions::RecoverableUploaderError, "Server error occured when deleting file #{file.path}"
     end
-
-    changed
-    notify_observers(DELETED_FILE, file)
   end
 
 private
@@ -135,15 +155,16 @@ private
 
   def find_asset(file)
     asset_type = ::Insup::Insales::Asset.get_type(file.path)
-
+    
     if !asset_type
       msg = "Cannot determine asset type for file #{file.path}"
+      changed
       notify_observers(ERROR, file, msg)
       raise Insup::Exceptions::RecoverableUploaderError, "Cannot determine asset type for file #{file.path}"
     end
 
-    files = assets_list.select  do |el|
-      el.type == asset_type && el.filename = file.filename
+    files = assets_list.select do |el|
+      el.type == asset_type && el.filename == file.file_name
     end
 
     if files && !files.empty?

@@ -6,8 +6,6 @@ require_relative '../lib/insup/console'
 
 include GLI::App
 
-@subcommand_option_handling_strategy = :normal
-
 program_desc 'Insup uploader'
 version Insup::VERSION
 flag [:c,:config], default_value: '.insup'
@@ -23,6 +21,7 @@ pre do |global_options, command, options, args|
 end
 
 on_error do |ex|
+  puts ex.message
   Insup::Console.process_error(ex)
   false
 end
@@ -105,7 +104,6 @@ command :insales do |c|
       Insup::Console.insales_download_theme(options[:force], options[:theme])
     end
   end
-  
 end
 
 default_command :listen

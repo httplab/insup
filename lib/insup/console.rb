@@ -74,6 +74,8 @@ module Insup::Console
 
   def self.insales_download_theme(force = false, theme_id = nil)
     theme_id ||= @settings.uploader['theme_id']
+    puts "Downloading theme #{theme_id}"
+
     @insup.insales.download_theme(theme_id, Dir.getwd) do |asset, exists|
       if exists && !force
         puts "#{asset.path} already exists"
@@ -119,7 +121,7 @@ module Insup::Console
     Kernel.trap( "INT" ) { exit_requested = true }
 
     while !exit_requested do
-      sleep 0.1
+      sleep(0.1)
     end
 
     puts 'Stopping listener...'

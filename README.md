@@ -90,6 +90,12 @@ List all themes in the Insales shop if `insales` section is given in the .insup 
 insup insales list-themes
 ```
 
+Download all Insales theme files into the working directory:
+```bash
+insup insales download [-f] [-t theme-id]
+```
+Specify `-f` flag to overwrite any existing file. If no theme ID is specified Insup will download theme specified in the .insup file.
+
 List files under tracked locations:
 ```bash
 insup list-files [--all|--ignored]

@@ -42,9 +42,8 @@ class Insup::Insales
       
       if write
         File.delete(path) if exists
-        w = asset.get
         Dir.mkdir(File.dirname(path)) if !Dir.exist?(File.dirname(path))
-        File.open(path, 'wb'){|f| f.write(w.data)}
+        File.open(path, 'wb'){|f| f.write(asset.data)}
       end
     end
   end
