@@ -143,7 +143,7 @@ private
     end
 
     files = assets_list.select  do |el|
-      el.type == asset_type && (el.human_readable_name == file.file_name || el.name == file.file_name)
+      el.type == asset_type && el.filename = file.filename
     end
 
     if files && !files.empty?

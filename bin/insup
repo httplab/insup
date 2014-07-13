@@ -105,15 +105,7 @@ command :insales do |c|
       Insup::Console.insales_download_theme(options[:force], options[:theme])
     end
   end
-
-  c.desc 'Request theme ZIP file from Insales and extract it to the current directory'
-  c.command 'zipdownload' do |sc|
-    sc.switch [:f, :force], desc: 'Overwrite existing files without prompt'
-    sc.flag [:t, :theme], desc: 'Insales theme id', default_value: nil
-    sc.action do |global_options, options, args|
-      Insup::Console.insales_download_theme_zip(options[:force], options[:theme])
-    end
-  end
+  
 end
 
 default_command :listen

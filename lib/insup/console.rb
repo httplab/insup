@@ -89,11 +89,6 @@ module Insup::Console
     end
   end
 
-  def self.insales_download_theme_zip(force = false, theme_id = nil)
-    theme_id ||= @settings.uploader['theme_id']
-    @insup.insales.download_theme_zip(theme_id)
-  end
-
   def self.status
     @insup.changes.each do |x|
       case x.state
