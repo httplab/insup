@@ -111,16 +111,13 @@ To see help message on the specific command, type:
 ```bash
 insup <command> --help
 ```
-## For windows users
+## Windows users
 
-If you already installed [Portable Jekyll](https://github.com/madhur/PortableJekyll), you can begin use insup, as it already contians all needed  dependencies for us, for install it you can see [ their repo]( "https://github.com/madhur/PortableJekyll")  after this, you can follow the instructions above.
+There was an issue report from Windows users concerning wrong file encoding upon uploading UTF-8 files to Insales. If you are experiencing encoding problems when running Insup on Windows, please use the following workaround until the problem is investigated and solved. 
 
-### Windows problems
-
-One of the common probles for windows users, maybe they will have to change command line characters from ANCII to Unicode type
-
+Before running any `insup` command exectute the following:
 ```bash
 chcp 65001
 ```
 
-before run  insup, otherwise you maybe will have [this problem]( https://github.com/httplab/insup/issues/11)
+This will change the econding of your Windows console to UTF-8 and allow you to avoid most encoding problems.
