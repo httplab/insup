@@ -113,7 +113,7 @@ insup <command> --help
 ```
 ## For windows users
 
-If you already installed [Portable Jekyll](https://github.com/madhur/PortableJekyll), you can begin use insup, as it already contians all needed  dependencies for us, for install it you can see [in their repo]( "https://github.com/madhur/PortableJekyll")  after this, you can follow the instructions above.
+If you already installed [Portable Jekyll](https://github.com/madhur/PortableJekyll), you can begin use insup, as it already contians all needed  dependencies for us, for install it you can see [ their repo]( "https://github.com/madhur/PortableJekyll")  after this, you can follow the instructions above.
 
 ### Windows problems
 
@@ -123,4 +123,4 @@ One of the common probles for windows users, maybe they will have to change comm
 chcp 65001
 ```
 
-before run  insup, otherwise you will have [this problem]( https://github.com/httplab/insup/issues/11)
+before run  insup, otherwise you maybe will have [this problem]( https://github.com/httplab/insup/issues/11)
