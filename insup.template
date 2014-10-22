@@ -3,6 +3,7 @@ track:
   - media
   - snippets
   - templates
+  - configuration
 
 # Tracker settings
 #   class: tracker class. Use 'git' or 'simple'
@@ -12,7 +13,7 @@ tracker:
 # Insales settings
 # subdomain: your Insales subdomain, e.g. my-shop.myinsales.ru
 # api_key: Insales API key for insup application
-# password: Insales API passeword for insup application
+# password: Insales API password for insup application
 insales:
   subdomain:
   api_key:
