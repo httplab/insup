@@ -10,7 +10,7 @@ class Listener
   def listen(&block)
     return if @listener
 
-    @listener = Listen.to(tracked_locations) do |modified, added, removed|
+    @listener = Listen.to(tracked_locations, force_polling: @settings.options['force_polling']) do |modified, added, removed|
       flags = {}
 
       added.each do |file|

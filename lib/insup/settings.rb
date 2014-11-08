@@ -47,6 +47,10 @@ class Insup::Settings
     Kernel.const_get(level)
   end
 
+  def options
+    @settings['options'] || {}
+  end
+
   def log_pattern
     log['pattern'] || "%{message}\n"
   end

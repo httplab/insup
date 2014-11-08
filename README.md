@@ -33,6 +33,7 @@ Open **.insup** file with your favourite text editor and modify the configuratio
 * [**uploader**](#uploaders) section specifies the uploader to use as well as its configuration. The uploader class is specified by the `class` option.
 * **insales** secion holds information for connecting to Insales shop. To use insales features you should specify `subdomain`, `api_key` and `password` parameters.
 * **log** section sets logging parameters. Use `file` to specify a log file path, `level` to set log level (`unknown`, `debug`, `error`, `fatal`, `info`, `unknown` and `warn`), and `pattern` to specify log message pattern using `%{timestamp}`, `%{level}`, `%{message}`, and `%{backtrace}` substitutions.
+* **options** section specifies miscellaneous options. Currently only [force_polling](#mac-osx-users) option is implemented.
 
 #### Trackers
 
@@ -111,8 +112,22 @@ To see help message on the specific command, type:
 ```bash
 insup <command> --help
 ```
-## Windows users
 
+##Troubleshooting
+
+### Mac OsX users
+For a reason yet unknown sometimes on a newer versions of Mac OsX Insup will only listen to changes that take place under the last folder listed in `track` settings.
+
+Current workaround is to fall back to filesystem polling by adding the following lines to the configuration:
+
+```yaml
+options:
+  force_polling: true
+```
+
+Filesystem polling may increase the CPU usage and decrease performance. Use this only if Insup doesn't work otherwise.
+
+### Windows users
 There was an issue report from Windows users concerning wrong file encoding upon uploading UTF-8 files to Insales. If you are experiencing encoding problems when running Insup on Windows, please use the following workaround until the problem is investigated and solved. 
 
 Before running any `insup` command exectute the following:

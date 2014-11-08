@@ -49,3 +49,10 @@ log:
   file: 'log/insup.log'
   level: 'info'
   pattern: "%{timestamp} - %{level}\t: %{message} %{backtrace}\n"
+
+# Other options
+options:
+  # Force the use of polling when listening to changes
+  # Use only if Insup doesn't work otherwise
+  force_polling: false
+  
