@@ -5,7 +5,6 @@ require_relative '../insup'
 
 class Insup
   module Console
-
     def self.start(settings_file = nil, verbose = false, debug = false)
       settings_file ||= '.insup'
       @settings = Insup::Settings.new(settings_file)
@@ -158,4 +157,3 @@ class Insup
 end
 
 require_relative 'console/upload_observer'
-+

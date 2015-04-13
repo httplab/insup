@@ -21,7 +21,7 @@ class Insup
 
       def raw_changes
         changed = @git.status.select do |_, v|
-          v[:untracked] || (%w('A', 'M', 'D').include? v[:type])
+          v[:untracked] || (%w(A M D).include? v[:type])
         end
 
         changed.map do |_, v|
