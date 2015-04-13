@@ -10,7 +10,8 @@ class Listener
   def listen(&block)
     return if @listener
 
-    @listener = Listen.to(tracked_locations, force_polling: @settings.options['force_polling']) do |modified, added, removed|
+    locations = tracked_locations.map{|tl| File.expand_path(tl, @base)}
+    @listener = Listen.to(locations, force_polling: @settings.options['force_polling']) do |modified, added, removed|
       flags = {}
 
       added.each do |file|
@@ -28,13 +29,12 @@ class Listener
       res = []
 
       flags.each do |f, flag|
-        pn = Pathname.new(f)
-        basepn = Pathname.new(@base)
-        file = pn.relative_path_from(basepn).to_s
+        file = File.expand_path(f, @base)
         next if ignore_matcher.matched?(file)
         tracked_file = create_tracked_file(flag, file)
-        res << tracked_file if !tracked_file.nil?
+        res << tracked_file unless tracked_file.nil?
       end
+
       yield res
     end
 
@@ -42,35 +42,32 @@ class Listener
   end
 
   def stop
-    if @listener
-      @listener.stop
-    end
+    @listener.stop if @listener
   end
 
   protected
 
   def create_tracked_file(flags, file)
     case flags
-      when 1
-        Insup::TrackedFile.new(file, Insup::TrackedFile::DELETED)
-      when 2
-        Insup::TrackedFile.new(file, Insup::TrackedFile::MODIFIED)
-      when 3
-        Insup::TrackedFile.new(file, Insup::TrackedFile::DELETED)
-      when 4
-        Insup::TrackedFile.new(file, Insup::TrackedFile::NEW)
-      when 5
-        if File.exist?(file)
-          Insup::TrackedFile.new(file, Insup::TrackedFile::UNSURE)
-        end
-      when 6
-        Insup::TrackedFile.new(file, Insup::TrackedFile::NEW)
-      when 7
-        if File.exist?(file)
-          Insup::TrackedFile.new(file, Insup::TrackedFile::UNSURE)
-        end
+    when 1
+      Insup::TrackedFile.new(file, Insup::TrackedFile::DELETED)
+    when 2
+      Insup::TrackedFile.new(file, Insup::TrackedFile::MODIFIED)
+    when 3
+      Insup::TrackedFile.new(file, Insup::TrackedFile::DELETED)
+    when 4
+      Insup::TrackedFile.new(file, Insup::TrackedFile::NEW)
+    when 5
+      if File.exist?(file)
+        Insup::TrackedFile.new(file, Insup::TrackedFile::UNSURE)
       end
-    
+    when 6
+      Insup::TrackedFile.new(file, Insup::TrackedFile::NEW)
+    when 7
+      if File.exist?(file)
+        Insup::TrackedFile.new(file, Insup::TrackedFile::UNSURE)
+      end
+    end
   end
 
   def ignore_matcher
@@ -84,5 +81,4 @@ class Listener
   def ignore_patterns
     @ignore_patterns = @settings.ignore_patterns
   end
-
 end

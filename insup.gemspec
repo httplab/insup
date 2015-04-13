@@ -1,4 +1,4 @@
-require File.expand_path("../lib/insup/version", __FILE__)
+require File.expand_path('../lib/insup/version', __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = 'insup'
@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
   s.files = `git ls-files`.split("\n")
   s.bindir = 'bin'
   s.test_files = `git ls-files -- {spec}/*`.split("\n")
-  s.require_paths = ["lib"]
+  s.require_paths = ['lib']
   s.executables << 'insup'
 
   s.post_install_message = "type 'insup help' for help"

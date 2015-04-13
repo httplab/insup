@@ -1,7 +1,7 @@
 require 'fileutils'
 
+# Main class for Insup. Encapsulates all essential insup abilities.
 class Insup
-
   def self.logger=(val)
     @logger = val
     Insup::Insales.logger = @logger
@@ -11,25 +11,30 @@ class Insup
     @logger
   end
 
-  def initialize(base, settings)
+  def initialize(settings)
     @settings = settings
-    @base = base
+    @base = @settings.working_directory
   end
 
   # Initializes a directory with a default .insup file
   def self.create_insup_file(dir = nil)
-    dir ||= Dir.getwd
-    template_file = File.join(File.dirname(File.expand_path(__FILE__)), '../insup.template')
     path = File.join(dir, '.insup')
-    FileUtils.cp(template_file, path) if !File.exist?(path)
+    return if File.exist?(path)
+    lib_dir = File.dirname(File.expand_path(__FILE__))
+    template_file = File.join(lib_dir, 'templates/insup.template')
+    FileUtils.cp(template_file, path)
   end
 
   def tracked_locations
     @settings.tracked_locations
   end
 
+  def working_dir
+    @settings.working_directory
+  end
+
   def files(options = {})
-    files = case options[:mode]
+    case options[:mode]
     when nil
       tracker.tracked_files
     when :all
@@ -39,37 +44,45 @@ class Insup
     end
   end
 
-  def commit(files = nil)
-    if files.nil? || files.empty?
-      list = changes
-    else
-      list = files.map do |f|
-        mode = File.exist?(f) ? TrackedFile::MODIFIED : TrackedFile::DELETED
-        TrackedFile.new(f, mode)
-      end
-    end
+  def get_file_path(file)
+    File.expand_path(file, @base)
+  end
 
-    list.each do |file|
-      uploader.process_file(file)
-    end
+  def commit(files = nil)
+    list =
+      if files.nil? || files.empty?
+        changes
+      else
+        files.map do |file|
+          f = get_file_path(file)
+          mode = File.exist?(f) ? TrackedFile::MODIFIED : TrackedFile::DELETED
+          TrackedFile.new(file, mode)
+        end
+      end
+
+    process_all_files(list)
   end
 
   def uploader
-    @uploader ||= if uploader_conf = @settings.uploader
-      klass = Insup::Uploader.find_uploader(uploader_conf['class']) || Object::const_get(uploader_conf['class'])
-      klass.new(@settings)
-    else
-      Uploader::DummyUploader.new(@settings)
-    end
+    @uploader ||=
+      if @settings.uploader
+        klass = Insup::Uploader.find_uploader(@settings.uploader['class']) ||
+                Object.const_get(@settings.uploader['class'])
+        klass.new(@settings)
+      else
+        Uploader::DummyUploader.new(@settings)
+      end
   end
 
   def tracker
-    @tracker ||= if tracker_conf = @settings.tracker
-      klass = Insup::Tracker.find_tracker(tracker_conf['class']) || Object::const_get(tracker_conf['class'])
-      klass.new(@base, @settings)
-    else
-      Tracker::SimpleTracker.new(@settings)
-    end
+    @tracker ||=
+      if @settings.tracker
+        klass = Insup::Tracker.find_tracker(@settings.tracker['class']) ||
+                Object.const_get(@settings.tracker['class'])
+        klass.new(@base, @settings)
+      else
+        Tracker::SimpleTracker.new(@settings)
+      end
   end
 
   def insales
@@ -82,6 +95,7 @@ class Insup
 
   def listen
     @listener = Listener.new(@base, @settings)
+
     @listener.listen do |changes|
       begin
         changes.each do |change|
@@ -97,6 +111,13 @@ class Insup
     @listener.stop
   end
 
+  protected
+
+  def process_all_files(files)
+    files.each do |file|
+      uploader.process_file(file)
+    end
+  end
 end
 
 require_relative 'insup/exceptions.rb'

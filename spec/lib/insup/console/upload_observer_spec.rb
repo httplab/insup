@@ -1,5 +1,3 @@
-require_relative '../../../spec_helper'
-
 describe Insup::Console::UploadObserver do
 
   it 'should handle all types of events' do

@@ -13,24 +13,28 @@ class Insup::Settings
     end
   end
 
+  def working_directory
+    settings['working_dir'] ? File.expand_path(settings['working_dir']) : Dir.getwd
+  end
+
   def tracked_locations
-    return settings['track'] || []
+    settings['track'] || []
   end
 
   def uploader
-    return @settings['uploader']
+    @settings['uploader']
   end
 
   def tracker
-    return @settings['tracker']
+    @settings['tracker']
   end
 
   def ignore_patterns
-    return @settings['ignore'] || []
+    @settings['ignore'] || []
   end
 
   def insales
-    return @settings['insales']
+    @settings['insales']
   end
 
   def save(filename)
@@ -64,5 +68,4 @@ class Insup::Settings
       f.write(@settings.to_yaml)
     end
   end
-
 end

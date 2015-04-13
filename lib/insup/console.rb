@@ -8,7 +8,7 @@ module Insup::Console
   def self.start(settings_file = nil, verbose = false, debug = false)
     settings_file ||= '.insup'
     @settings = Insup::Settings.new(settings_file)
-    @insup = Insup.new(Dir.getwd, @settings)
+    @insup = Insup.new(@settings)
     @verbose = verbose
     @debug = debug
     self.init_log(@settings)
@@ -20,7 +20,7 @@ module Insup::Console
       @logger = Logger.new($stdout)
     else
       log_dir = File.dirname(settings.log_file)
-      FileUtils.mkdir_p(log_dir) if !Dir.exist?(log_dir)
+      FileUtils.mkdir_p(log_dir) unless Dir.exist?(log_dir)
       @logger = Logger.new(settings.log_file)
     end
 
@@ -76,7 +76,7 @@ module Insup::Console
     theme_id ||= @settings.uploader['theme_id']
     puts "Downloading theme #{theme_id}"
 
-    @insup.insales.download_theme(theme_id, Dir.getwd) do |asset, exists|
+    @insup.insales.download_theme(theme_id, @settings.working_directory) do |asset, exists|
       if exists && !force
         puts "#{asset.path} already exists"
         false
@@ -111,6 +111,8 @@ module Insup::Console
     puts @settings.tracked_locations.map{|loc| "\t#{loc}"}
     puts 'Ignore patterns:'
     puts @settings.ignore_patterns.map{|ip| "\t#{ip}"}
+    puts 'Working directory:'
+    puts @insup.working_dir
   end
 
   def self.listen

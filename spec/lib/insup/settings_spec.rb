@@ -1,5 +1,3 @@
-require_relative '../../spec_helper'
-
 describe Insup::Settings do
   before(:each) do
     @settings = described_class.new('spec/support/.insup')

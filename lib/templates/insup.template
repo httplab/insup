@@ -1,3 +1,6 @@
+# Working directory. Defaults to the current directory
+# working_dir: build
+
 # Tracked locations. List all subdirectories of the working directory you want Insup to track
 track:
   - media
@@ -55,4 +58,4 @@ options:
   # Force the use of polling when listening to changes
   # Use only if Insup doesn't work otherwise
   force_polling: false
-  
+

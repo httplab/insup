@@ -1,0 +1,4 @@
+# Configuration parameters: ExactNameMatch, AllowPredicates, AllowDSLWriters, IgnoreClassMethods, Whitelist.
+Style/TrivialAccessors:
+  Enabled: true
+  IgnoreClassMethods: true
