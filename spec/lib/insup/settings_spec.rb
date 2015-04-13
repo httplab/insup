@@ -3,20 +3,19 @@ describe Insup::Settings do
     @settings = described_class.new('spec/support/.insup')
   end
 
-  it 'should have correct tracked locations' do
-    expect(['media', 'templates', 'snippets'] - @settings.tracked_locations).to be_empty
+  it 'has correct tracked locations' do
+    expect(%w('media', 'templates', 'snippets') - @settings.tracked_locations).to be_empty
   end
 
-  it 'should have correct tracker' do
-    expect(@settings.tracker['class']).to eq ('Insup::Tracker::GitTracker')
+  it 'has correct tracker' do
+    expect(@settings.tracker['class']).to eq('Insup::Tracker::GitTracker')
   end
 
-  it 'should have correct uploader' do
-    expect(@settings.uploader['class']).to eq ('Insup::Uploader::InsalesUploader')
+  it 'has correct uploader' do
+    expect(@settings.uploader['class']).to eq('Insup::Uploader::InsalesUploader')
   end
 
-  it 'should have correct ignore paths' do
+  it 'has correct ignore paths' do
     expect(@settings.ignore_patterns).to include('*.swp')
   end
-
 end

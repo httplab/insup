@@ -1,7 +1,6 @@
 require 'listen'
 
 class Listener
-
   def initialize(base, settings)
     @base = base
     @settings = settings
