@@ -23,17 +23,15 @@ class Insup
           name
         elsif human_readable_name.match(fname_rex)
           human_readable_name
-        else
-          nil
         end
       end
 
-      def is_image?
+      def image?
         content_type =~ /image/ || content_type =~ /octet-stream/ || content_type =~ /flash/
       end
 
       def self.get_type(path)
-        TYPE_MAP.each do |k,v|
+        TYPE_MAP.each do |k, v|
           return v if path.start_with?("#{k}/")
         end
       end
@@ -47,10 +45,10 @@ class Insup
       end
 
       def data
-        if respond_to? (:asset_url)
+        if respond_to?(:asset_url)
           download_data_from_url
         elsif ['Asset::Snippet', 'Asset::Template'].include?(type)
-          w = get_full
+          w = full
           w.content if w.respond_to?(:content)
         end
       end
@@ -59,16 +57,16 @@ class Insup
         prefix_options[:theme_id]
       end
 
-      def get_full
-        self.class.find(id, params: {theme_id: theme_id})
+      def full
+        self.class.find(id, params: { theme_id: theme_id })
       end
 
       def url
-        "#{self.class.site}#{self.asset_url}"
+        "#{self.class.site}#{asset_url}"
       end
 
       def download_data_from_url
-        Net::HTTP.get(URI(self.url))
+        Net::HTTP.get(URI(url))
       end
     end
   end

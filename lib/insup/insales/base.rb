@@ -1,7 +1,7 @@
 class Insup
   class Insales
     class Base < ActiveResource::Base
-      self.headers['User-Agent'] = %W(
+      headers['User-Agent'] = %W(
         insup/#{Insup::VERSION}
         ActiveResource/#{ActiveResource::VERSION::STRING}
         Ruby/#{RUBY_VERSION}

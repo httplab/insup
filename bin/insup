@@ -8,8 +8,8 @@ include GLI::App
 
 program_desc 'Insup uploader'
 version Insup::VERSION
-flag [:c,:config], default_value: '.insup'
-switch [:v,:verbose], desc: 'Be verbose'
+flag [:c, :config], default_value: '.insup'
+switch [:v, :verbose], desc: 'Be verbose'
 switch [:d, :debug], desc: 'Dump debug information upon error'
 
 pre do |global_options|
@@ -109,4 +109,3 @@ end
 default_command :listen
 
 exit run(ARGV)
-

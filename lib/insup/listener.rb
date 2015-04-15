@@ -6,10 +6,10 @@ class Listener
     @settings = settings
   end
 
-  def listen(&block)
+  def listen
     return if @listener
 
-    locations = tracked_locations.map{|tl| File.expand_path(tl, @base)}
+    locations = tracked_locations.map { |tl| File.expand_path(tl, @base) }
     @listener = Listen.to(locations, force_polling: @settings.options['force_polling']) do |modified, added, removed|
       flags = {}
 
@@ -34,7 +34,7 @@ class Listener
         res << tracked_file unless tracked_file.nil?
       end
 
-      yield res
+      yield res if block_given
     end
 
     @listener.start

@@ -3,7 +3,7 @@ require 'colorize'
 class Insup
   class Uploader
     class DummyUploader < Insup::Uploader
-      uploader :dummy
+      register_uploader :dummy
 
       def upload_file(file)
         case file.state
@@ -20,7 +20,7 @@ class Insup
         end
       end
 
-      def remove_file file
+      def remove_file(file)
         changed
         notify_observers(DELETING_FILE, file)
         changed
@@ -29,9 +29,9 @@ class Insup
 
       def batch_upload(files)
         changed
-        notify_observers(BATCH_UPLOADING_FILE, file)
+        notify_observers(BATCH_UPLOADING_FILES, files)
         changed
-        notify_observers(BATCH_UPLOADED_FILE, file)
+        notify_observers(BATCH_UPLOADED_FILES, files)
       end
     end
   end

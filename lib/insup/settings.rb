@@ -63,11 +63,5 @@ class Insup
     def log_file
       log['file']
     end
-
-    def save(filename)
-      File.open(filename, 'w') do |f|
-        f.write(@settings.to_yaml)
-      end
-    end
   end
 end

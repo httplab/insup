@@ -1,10 +1,10 @@
 describe Insup::TrackedFile do
   it 'creates instance correctly' do
-    expect{ described_class.new('media/application.css', Insup::TrackedFile::NEW) }.not_to raise_error
+    expect { described_class.new('media/application.css', Insup::TrackedFile::NEW) }.not_to raise_error
   end
 
   it 'fails if absolute path given' do
-    expect{ described_class.new('/a/b/c', Insup::TrackedFile::NEW) }.to raise_error(Insup::Exceptions::InsupError)
+    expect { described_class.new('/a/b/c', Insup::TrackedFile::NEW) }.to raise_error(Insup::Exceptions::InsupError)
   end
 
   describe '#file_name' do
@@ -39,7 +39,7 @@ describe Insup::TrackedFile do
     it 'fails if base path is not absolute' do
       base = 'hamlet'
       f = described_class.new('characters/romeo.rb', Insup::TrackedFile::NEW)
-      expect{ f.absolute_path(base) }.to raise_error(Insup::Exceptions::InsupError)
+      expect { f.absolute_path(base) }.to raise_error(Insup::Exceptions::InsupError)
     end
   end
 end

@@ -1,6 +1,6 @@
 describe Insup::Git do
   it 'gets status' do
-    expect{ git = described_class.new(Dir.getwd) }.not_to raise_error
+    expect { described_class.new(Dir.getwd) }.not_to raise_error
   end
 
   it 'fails if not a git repository' do

@@ -16,9 +16,8 @@ class Insup
     end
 
     def configure_api
-      unless @has_api
-        @has_api = ::Insup::Insales::Base.configure(config['api_key'], config['subdomain'], config['password'])
-      end
+      return unless @has_api
+      @has_api = ::Insup::Insales::Base.configure(config['api_key'], config['subdomain'], config['password'])
     end
 
     def themes
@@ -40,12 +39,10 @@ class Insup
         exists = File.exist?(path)
         write = !exists
         write = yield(asset, exists) if block_given?
-
-        if write
-          File.delete(path) if exists
-          Dir.mkdir(File.dirname(path)) unless Dir.exist?(File.dirname(path))
-          File.open(path, 'wb'){|f| f.write(asset.data)}
-        end
+        next unless write
+        File.delete(path) if exists
+        Dir.mkdir(File.dirname(path)) unless Dir.exist?(File.dirname(path))
+        File.open(path, 'wb') { |f| f.write(asset.data) }
       end
     end
   end
@@ -55,4 +52,3 @@ require 'active_resource'
 require_relative 'insales/base'
 require_relative 'insales/asset'
 require_relative 'insales/theme'
-

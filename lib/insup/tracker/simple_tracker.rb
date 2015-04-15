@@ -2,7 +2,7 @@
 class Insup
   class Tracker
     class SimpleTracker < Insup::Tracker
-      tracker :simple
+      register_tracker :simple
 
       def raw_changes
         tracked_files.map do |p|

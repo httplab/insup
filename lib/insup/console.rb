@@ -11,7 +11,7 @@ class Insup
       @insup = Insup.new(@settings)
       @verbose = verbose
       @debug = debug
-      self.init_log(@settings)
+      init_log(@settings)
       true
     end
 
@@ -25,8 +25,7 @@ class Insup
       end
 
       @logger.level = @debug ? Logger::DEBUG : settings.log_level
-      @logger.formatter = proc do |severity, datetime, progname, msg|
-
+      @logger.formatter = proc do |severity, datetime, _progname, msg|
         format_string = settings.log_pattern
         values_hash = {
           level: severity,
@@ -108,9 +107,9 @@ class Insup
       puts "Tracker: #{@settings.tracker['class']}"
       puts "Uploader: #{@settings.uploader['class']}"
       puts 'Tracked locations:'
-      puts @settings.tracked_locations.map{|loc| "\t#{loc}"}
+      puts @settings.tracked_locations.map { |loc| "\t#{loc}" }
       puts 'Ignore patterns:'
-      puts @settings.ignore_patterns.map{|ip| "\t#{ip}"}
+      puts @settings.ignore_patterns.map { |ip| "\t#{ip}" }
       puts 'Working directory:'
       puts @insup.working_dir
     end
@@ -120,12 +119,8 @@ class Insup
       puts 'Listening...'
       @insup.listen
       exit_requested = false
-      Kernel.trap( "INT" ) { exit_requested = true }
-
-      while !exit_requested do
-        sleep(0.1)
-      end
-
+      Kernel.trap('INT') { exit_requested = true }
+      sleep(0.1) until exit_requested
       puts 'Stopping listener...'
       @insup.stop_listening
       puts 'Terminated by user'
@@ -143,9 +138,7 @@ class Insup
         $stderr.puts "Error: #{exception.message}".red
       end
 
-      if @debug
-        $stderr.puts exception.backtrace
-      end
+      $stderr.puts exception.backtrace if @debug
 
       begin
         @logger.error(exception) if @logger

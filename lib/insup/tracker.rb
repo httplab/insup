@@ -2,13 +2,15 @@ require 'match_files'
 class Insup
   # Base class for all trackers
   class Tracker
-    def self.tracker(tracker_alias)
-      @@trackers ||= {}
-      @@trackers[tracker_alias] = self
+    def self.register_tracker(tracker_alias, tracker_class = self)
+      superclass.register_tracker(tracker_alias, tracker_class) if self != Tracker
+
+      @trackers ||= {}
+      @trackers[tracker_alias] = self
     end
 
     def self.find_tracker(tracker_alias)
-      @@trackers[tracker_alias.to_sym]
+      @trackers[tracker_alias.to_sym]
     end
 
     def initialize(base, config)
@@ -22,31 +24,31 @@ class Insup
       locations.map do |loc|
         loc_pat = File.join(loc, '**/*')
         Dir.glob(loc_pat, File::FNM_DOTMATCH)
-          .select{|e| File.file?(e)}
+          .select { |e| File.file?(e) }
       end.flatten
     end
 
     # Lists all tracked files in the tracked locations i. e. all files but ignored
     def tracked_files
-      all_files.reject{|f| ignore_matcher.matched?(f)}
+      all_files.reject { |f| ignore_matcher.matched?(f) }
     end
 
     # Lists all tracked files in the tracked locations i. e. all files but ignored
     def ignored_files
-      all_files.select{|f| ignore_matcher.matched?(f)}
+      all_files.select { |f| ignore_matcher.matched?(f) }
     end
 
     def changes
-      res = raw_changes.select do |x|
+      raw_changes.select do |x|
         tracked_locations.any? do |loc|
-          !ignore_matcher.matched?(x.path) && File.fnmatch(File.join(loc,'/*'), x.path)
+          !ignore_matcher.matched?(x.path) && File.fnmatch(File.join(loc, '/*'), x.path)
         end
       end
     end
 
     protected
 
-    def raw_changes; end;
+    def raw_changes; end
 
     def ignore_matcher
       @ignore_matcher ||= ::MatchFiles.git(@path, ignore_patterns)

@@ -4,7 +4,7 @@ require_relative '../insales'
 class Insup
   class Uploader
     class InsalesUploader < Insup::Uploader
-      uploader :insales
+      register_uploader :insales
 
       def initialize(settings)
         super
@@ -45,7 +45,7 @@ class Insup
           msg = "Cannot determine asset type for file #{file.path}"
           changed
           notify_observers(ERROR, file, msg)
-          raise Insup::Exceptions::RecoverableUploaderError, msg
+          fail Insup::Exceptions::RecoverableUploaderError, msg
         end
 
         file_contents = File.read(file.path)
@@ -115,7 +115,7 @@ class Insup
           msg = "Cannot find remote counterpart for file #{file.path}"
           changed
           notify_observers(ERROR, file, msg)
-          raise Insup::Exceptions::RecoverableUploaderError, "Cannot find remote counterpart for file #{file.path}"
+          fail Insup::Exceptions::RecoverableUploaderError, "Cannot find remote counterpart for file #{file.path}"
         end
 
         changed
@@ -153,7 +153,7 @@ class Insup
       end
 
       def themes
-        @themes ||= Hash[@insales.themes.map{|t| [t.id, t]}]
+        @themes ||= Hash[@insales.themes.map { |t| [t.id, t] }]
       end
 
       def find_asset(file)
@@ -163,7 +163,7 @@ class Insup
           msg = "Cannot determine asset type for file #{file.path}"
           changed
           notify_observers(ERROR, file, msg)
-          raise Insup::Exceptions::RecoverableUploaderError, "Cannot determine asset type for file #{file.path}"
+          fail Insup::Exceptions::RecoverableUploaderError, "Cannot determine asset type for file #{file.path}"
         end
 
         files = assets_list.select do |el|

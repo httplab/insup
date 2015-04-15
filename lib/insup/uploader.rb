@@ -17,26 +17,27 @@ class Insup
 
     attr_reader :base
 
-    def self.uploader(uploader_alias)
-      @@uploaders ||= {}
-      @@uploaders[uploader_alias] = self
+    def self.register_uploader(uploader_alias, uploader_class = self)
+      superclass.register_uploader(uploader_alias, uploader_class) if self != Uploader
+      @uploaders ||= {}
+      @uploaders[uploader_alias] = uploader_class
     end
 
     def self.find_uploader(uploader_alias)
-      @@uploaders[uploader_alias.to_sym]
+      @uploaders[uploader_alias.to_sym]
     end
 
     def initialize(base)
-      @base = base
-
       unless Pathname.new(base).absolute?
         fail Insup::Exceptions::InsupError, "Uploader base requires absolute base path. #{base} given."
       end
+
+      @base = base
     end
 
-    def upload_file(file); end
+    def upload_file(_file); end
 
-    def delete_file(file); end
+    def delete_file(_file); end
 
     def batch_upload(files)
       files.each do |file|

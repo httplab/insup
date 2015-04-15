@@ -4,7 +4,7 @@ require_relative('../git')
 class Insup
   class Tracker
     class GitTracker < Insup::Tracker
-      tracker :git
+      register_tracker :git
 
       def initialize(base, config)
         super
