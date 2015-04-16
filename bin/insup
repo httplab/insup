@@ -3,11 +3,12 @@
 require 'gli'
 require 'i18n'
 require 'i18n/backend/fallbacks'
-I18n::Backend::Simple.send(:include, I18n::Backend::Fallbacks)
+
 require_relative '../lib/insup/version'
 require_relative '../lib/insup/console'
 require_relative '../lib/locale_parser'
 
+I18n::Backend::Simple.send(:include, I18n::Backend::Fallbacks)
 include GLI::App
 
 I18n.load_path = Dir.glob(File.expand_path('../../lib/translations/*.yml', __FILE__))

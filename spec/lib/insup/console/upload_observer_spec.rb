@@ -1,5 +1,5 @@
 describe Insup::Console::UploadObserver do
-  it 'should handle all types of events' do
+  it 'handles all types of events' do
     @observer = described_class.new
 
     events =
