@@ -1,83 +1,81 @@
 require 'listen'
 
+# Listens to directory changes and executes callback each time something changes
 class Listener
-  def initialize(base, settings)
+  attr_reader :tracked_locations, :ignore_patterns, :force_polling
+
+  FLAGS_MAP = {
+    1 => Insup::TrackedFile::DELETED,
+    2 => Insup::TrackedFile::MODIFIED,
+    3 => Insup::TrackedFile::DELETED,
+    4 => Insup::TrackedFile::NEW,
+    5 => Insup::TrackedFile::UNSURE,
+    6 => Insup::TrackedFile::NEW,
+    7 => Insup::TrackedFile::UNSURE
+  }.freeze
+
+  def initialize(base, settings = {})
+    defaults = {
+      force_polling: false,
+      tracked_locations: [],
+      ignore_patterns: []
+    }
+
     @base = base
-    @settings = settings
+    settings = defaults.merge(settings)
+
+    @tracked_locations = settings[:tracked_locations]
+    @ignore_patterns = settings[:ignore_patterns]
+    @force_polling = settings[:force_polling]
   end
 
   def listen
     return if @listener
 
     locations = tracked_locations.map { |tl| File.expand_path(tl, @base) }
-    @listener = Listen.to(locations, force_polling: @settings.options['force_polling']) do |modified, added, removed|
-      flags = {}
 
-      added.each do |file|
-        flags[file] = flags[file] ? flags[file] | 4 : 4
+    @listener =
+      Listen.to(locations, force_polling) do |modified, added, removed|
+        flags = prepare_flags(modified, added, removed)
+        changes = prepare_changes(flags)
+        yield changes if block_given?
       end
-
-      modified.each do |file|
-        flags[file] = flags[file] ? flags[file] | 2 : 2
-      end
-
-      removed.each do |file|
-        flags[file] = flags[file] ? flags[file] | 1 : 1
-      end
-
-      res = []
-
-      flags.each do |f, flag|
-        file = File.expand_path(f, @base)
-        next if ignore_matcher.matched?(file)
-        tracked_file = create_tracked_file(flag, file)
-        res << tracked_file unless tracked_file.nil?
-      end
-
-      yield res if block_given
-    end
 
     @listener.start
   end
 
   def stop
     @listener.stop if @listener
+    @listener = nil
   end
 
   protected
 
+  def prepare_flags(modified, added, removed)
+    flags = Hash.new(0)
+
+    added.each    { |f| flags[f] |= 4 }
+    modified.each { |f| flags[f] |= 2 }
+    removed.each  { |f| flags[f] |= 1 }
+
+    flags
+  end
+
+  def prepare_changes(flags)
+    flags.map do |f, flag|
+      file = File.expand_path(f, @base)
+      next if ignore_matcher.matched?(file)
+      create_tracked_file(flag, file)
+    end.compact
+  end
+
   def create_tracked_file(flags, file)
-    case flags
-    when 1
-      Insup::TrackedFile.new(file, Insup::TrackedFile::DELETED)
-    when 2
-      Insup::TrackedFile.new(file, Insup::TrackedFile::MODIFIED)
-    when 3
-      Insup::TrackedFile.new(file, Insup::TrackedFile::DELETED)
-    when 4
-      Insup::TrackedFile.new(file, Insup::TrackedFile::NEW)
-    when 5
-      if File.exist?(file)
-        Insup::TrackedFile.new(file, Insup::TrackedFile::UNSURE)
-      end
-    when 6
-      Insup::TrackedFile.new(file, Insup::TrackedFile::NEW)
-    when 7
-      if File.exist?(file)
-        Insup::TrackedFile.new(file, Insup::TrackedFile::UNSURE)
-      end
-    end
+    state = FLAGS_MAP[flags]
+    return nil unless state == Insup::TrackedFile::UNSURE && !File.exist?(file)
+    Insup::TrackedFile.new(file, state) if state
   end
 
   def ignore_matcher
     @ignore_matcher ||= ::MatchFiles.git(@base, ignore_patterns)
-  end
-
-  def tracked_locations
-    @track = @settings.tracked_locations
-  end
-
-  def ignore_patterns
-    @ignore_patterns = @settings.ignore_patterns
   end
 end
