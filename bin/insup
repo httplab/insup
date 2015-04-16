@@ -1,22 +1,32 @@
 #!/usr/bin/env ruby
 
 require 'gli'
+require 'i18n'
+require 'i18n/backend/fallbacks'
+I18n::Backend::Simple.send(:include, I18n::Backend::Fallbacks)
 require_relative '../lib/insup/version'
 require_relative '../lib/insup/console'
+require_relative '../lib/locale_parser'
 
 include GLI::App
 
-program_desc 'Insup uploader'
+I18n.load_path = Dir.glob(File.expand_path('../../lib/translations/*.yml', __FILE__))
+I18n.backend.load_translations
+I18n.enforce_available_locales = false
+I18n.config.locale = LocaleParser.locale
+
+program_desc I18n.t('app.name')
 version Insup::VERSION
 flag [:c, :config], default_value: '.insup'
-switch [:v, :verbose], desc: 'Be verbose'
-switch [:d, :debug], desc: 'Dump debug information upon error'
+switch [:v, :verbose], desc: I18n.t('app.global_params.verbose')
+switch [:d, :debug], desc: I18n.t('app.global_params.debug')
 
 pre do |global_options|
   settings_file = global_options[:config]
   verbose = global_options[:verbose]
   debug = global_options[:debug]
   ENV['GLI_DEBUG'] = 'true' if debug
+
   Insup::Console.start(settings_file, verbose, debug)
 end
 

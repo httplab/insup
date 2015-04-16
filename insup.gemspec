@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'listen', '~> 2.7'
   s.add_dependency 'match_files', '~> 0.2'
   s.add_dependency 'activeresource', '~> 4.0'
+  s.add_dependency 'i18n', '~> 0.7'
 
   s.files = `git ls-files`.split("\n")
   s.bindir = 'bin'

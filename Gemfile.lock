@@ -5,6 +5,7 @@ PATH
       activeresource (~> 4.0)
       colorize (~> 0.7)
       gli (~> 2.11)
+      i18n (~> 0.7)
       listen (~> 2.7)
       match_files (~> 0.2)
 

@@ -31,22 +31,12 @@ class Insup
 
       def upload_new_file(file)
         asset = find_asset(file)
-
-        unless asset.nil?
-          upload_modified_file(file)
-          return
-        end
+        return upload_modified_file(file) if asset
 
         changed
         notify_observers(CREATING_FILE, file)
         asset_type = ::Insup::Insales::Asset.get_type(file.path)
-
-        unless asset_type
-          msg = "Cannot determine asset type for file #{file.path}"
-          changed
-          notify_observers(ERROR, file, msg)
-          fail Insup::Exceptions::RecoverableUploaderError, msg
-        end
+        notify_and_fail("Cannot determine asset type for file #{file.path}", file) unless asset_type
 
         file_contents = File.read(file.path)
 
@@ -67,20 +57,14 @@ class Insup
           assets_list << asset
           changed
           notify_observers(CREATED_FILE, file)
-        rescue ActiveResource::ServerError => ex
-          changed
-          notify_observers(ERROR, file, ex.message)
-          raise Insup::Exceptions::RecoverableUploaderError, "Server error occured when creating file #{file.path}"
+        rescue ActiveResource::ServerError
+          notify_and_fail("Server error occured when creating file #{file.path}", file)
         end
       end
 
       def upload_modified_file(file)
         asset = find_asset(file)
-
-        unless asset
-          upload_new_file(file)
-          return
-        end
+        return upload_new_file(file) unless asset
 
         changed
         notify_observers(MODIFYING_FILE, file)
@@ -89,18 +73,11 @@ class Insup
         if asset.content_type.start_with? 'text/'
           begin
             res = asset.update_attribute(:content, file_contents)
-
-            unless res
-              process_error(asset, file)
-              return
-            end
-
+            return process_error(asset, file) unless res
             changed
             notify_observers(MODIFIED_FILE, file)
-          rescue ActiveResource::ServerError => ex
-            changed
-            notify_observers(ERROR, file, ex.message)
-            raise Insup::Exceptions::RecoverableUploaderError, "Server error occured when updating file #{file.path}"
+          rescue ActiveResource::ServerError
+            notify_and_fail("Server error occured when updating file #{file.path}", file)
           end
         else
           remove_file(file)
@@ -109,15 +86,7 @@ class Insup
       end
 
       def remove_file(file)
-        asset = find_asset(file)
-
-        unless asset
-          msg = "Cannot find remote counterpart for file #{file.path}"
-          changed
-          notify_observers(ERROR, file, msg)
-          fail Insup::Exceptions::RecoverableUploaderError, "Cannot find remote counterpart for file #{file.path}"
-        end
-
+        asset = find_asset!(file)
         changed
         notify_observers(DELETING_FILE, file)
 
@@ -135,6 +104,12 @@ class Insup
       end
 
       private
+
+      def notify_and_fail(msg, file, exception_class = Insup::Exceptions::RecoverableUploaderError)
+        changed
+        notify_observers(ERROR, file, msg)
+        fail exception_class, msg
+      end
 
       def process_error(entity, file)
         changed
@@ -158,31 +133,23 @@ class Insup
 
       def find_asset(file)
         asset_type = ::Insup::Insales::Asset.get_type(file.path)
-
-        unless asset_type
-          msg = "Cannot determine asset type for file #{file.path}"
-          changed
-          notify_observers(ERROR, file, msg)
-          fail Insup::Exceptions::RecoverableUploaderError, "Cannot determine asset type for file #{file.path}"
-        end
+        notify_and_fail("Cannot determine asset type for file #{file.path}", file) unless asset_type
 
         files = assets_list.select do |el|
           el.type == asset_type && el.filename == file.file_name
         end
 
-        if files && !files.empty?
-          return files.first
-        else
-          return nil
-        end
+        files.first if files && !files.empty?
+      end
+
+      def find_asset!(file)
+        asset = find_asset(file)
+        notify_and_fail("Cannot find remote counterpart for file #{file.path}", file) unless asset
+        asset
       end
 
       def assets_list(reload = false)
-        if !@assets_list || reload
-          @assets_list ||= theme.assets.to_a
-        else
-          @assets_list
-        end
+        @assets_list ||= reload || theme.assets.to_a
       end
     end
   end

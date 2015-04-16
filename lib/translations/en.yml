@@ -1,0 +1,6 @@
+en:
+  app:
+    name: Insup uploader
+    global_params:
+      verbose: Be verbose
+      debug: Dump debug information upon error

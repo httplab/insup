@@ -1,0 +1,6 @@
+ru:
+  app:
+    name: Insup
+    global_params:
+      verbose: Расширенный вывод
+      debug: Выводить отладочную информацию
