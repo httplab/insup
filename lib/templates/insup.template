@@ -53,9 +53,17 @@ log:
   level: 'info'
   pattern: "%{timestamp} - %{level}\t: %{message} %{backtrace}\n"
 
-# Other options
-options:
+# Listen options
+listen:
   # Force the use of polling when listening to changes
   # Use only if Insup doesn't work otherwise
   force_polling: false
+
+  # Set the delay in seconds between checking for changes
+  # default: 0.25 sec (1.0 sec for polling)
+  # latency: 0.5
+
+  # Set the delay in seconds between processing changes when there are any
+  # default: 0.10 sec
+  # wait_for_delay: 4
 

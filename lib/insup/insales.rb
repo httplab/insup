@@ -16,7 +16,7 @@ class Insup
     end
 
     def configure_api
-      return unless @has_api
+      return if @has_api
       @has_api = ::Insup::Insales::Base.configure(config['api_key'], config['subdomain'], config['password'])
     end
 

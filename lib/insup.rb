@@ -94,7 +94,7 @@ class Insup
   end
 
   def listen
-    @listener = Listener.new(@base, @settings)
+    @listener = Listener.new(@base, @settings.listener_settings)
 
     @listener.listen do |changes|
       begin

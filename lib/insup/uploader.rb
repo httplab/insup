@@ -27,7 +27,7 @@ class Insup
       @uploaders[uploader_alias.to_sym]
     end
 
-    def initialize(base)
+    def initialize(base, _settings = {})
       unless Pathname.new(base).absolute?
         fail Insup::Exceptions::InsupError, "Uploader base requires absolute base path. #{base} given."
       end

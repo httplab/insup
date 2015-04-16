@@ -6,7 +6,7 @@ class Insup
     class InsalesUploader < Insup::Uploader
       register_uploader :insales
 
-      def initialize(settings)
+      def initialize(base, settings = {})
         super
         @insales = Insup::Insales.new(settings)
         @insales.configure_api

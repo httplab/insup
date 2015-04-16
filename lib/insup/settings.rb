@@ -14,6 +14,16 @@ class Insup
       end
     end
 
+    def listener_settings
+      {
+        tracked_locations: tracked_locations,
+        ignore_patterns: ignore_patterns,
+        wait_for_delay: settings['listen']['wait_for_delay'],
+        latency: settings['listen']['latency'],
+        force_polling: settings['listen']['latency']
+      }
+    end
+
     def working_directory
       settings['working_dir'] ? File.expand_path(settings['working_dir']) : Dir.getwd
     end

@@ -18,8 +18,8 @@ class Listener
   def initialize(base, settings = {})
     defaults = {
       force_polling: false,
-      tracked_locations: [],
-      ignore_patterns: []
+      ignore_patterns: [],
+      tracked_locations: []
     }
 
     @base = base
@@ -28,7 +28,12 @@ class Listener
 
     @tracked_locations = settings[:tracked_locations]
     @ignore_patterns = settings[:ignore_patterns]
-    @force_polling = settings[:force_polling]
+
+    settings
+      .delete(:tracked_locations)
+      .delete(:ignore_patterns)
+
+    @listener_options = settings
   end
 
   def listen
@@ -37,7 +42,7 @@ class Listener
     locations = tracked_locations.map { |tl| File.expand_path(tl, @base) }
 
     @listener =
-      Listen.to(locations, force_polling: force_polling) do |modified, added, removed|
+      Listen.to(locations, @listener_options) do |modified, added, removed|
         flags = prepare_flags(modified, added, removed)
         changes = prepare_changes(flags)
         yield changes if block_given?

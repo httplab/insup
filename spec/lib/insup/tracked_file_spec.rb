@@ -1,24 +1,24 @@
 describe Insup::TrackedFile do
   it 'creates instance correctly' do
-    expect { described_class.new('media/application.css', Insup::TrackedFile::NEW) }.not_to raise_error
+    expect { described_class.new('media/application.css') }.not_to raise_error
   end
 
   it 'fails if absolute path given' do
-    expect { described_class.new('/a/b/c', Insup::TrackedFile::NEW) }.to raise_error(Insup::Exceptions::InsupError)
+    expect { described_class.new('/a/b/c') }.to raise_error(Insup::Exceptions::InsupError)
   end
 
   describe '#file_name' do
     it 'works' do
-      f = described_class.new('media/application.css', Insup::TrackedFile::NEW)
+      f = described_class.new('media/application.css')
       expect(f.file_name).to eq('application.css')
 
-      f = described_class.new('media/mbon.js', Insup::TrackedFile::NEW)
+      f = described_class.new('media/mbon.js')
       expect(f.file_name).to eq('mbon.js')
     end
   end
 
   describe '#absolute_path' do
-    subject(:subject) { described_class.new('characters/romeo.rb', Insup::TrackedFile::NEW) }
+    subject(:subject) { described_class.new('characters/romeo.rb') }
 
     it 'works with regular paths' do
       base = '/home/shakespeare/projets/hamlet'
@@ -46,13 +46,13 @@ describe Insup::TrackedFile do
     it 'works when file exists' do
       base = Dir.mktmpdir
       File.write(File.join(base, 'a.txt'), 'hi')
-      f = described_class.new('a.txt', Insup::TrackedFile::NEW)
+      f = described_class.new('a.txt')
       expect(f).to exist(base)
     end
 
     it "works when file doesn't exist" do
       base = Dir.mktmpdir
-      f = described_class.new('a.txt', Insup::TrackedFile::NEW)
+      f = described_class.new('a.txt')
       expect(f).not_to exist(base)
     end
   end
