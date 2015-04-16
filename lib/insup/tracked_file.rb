@@ -33,5 +33,25 @@ class Insup
 
       File.expand_path(@path, base)
     end
+
+    def exist?(base)
+      File.exist?(absolute_path(base))
+    end
+
+    def new?
+      state == NEW
+    end
+
+    def modified?
+      state == MODIFIED
+    end
+
+    def deleted?
+      state == DELETED
+    end
+
+    def unsure?
+      state == UNSURE
+    end
   end
 end

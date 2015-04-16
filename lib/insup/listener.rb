@@ -1,4 +1,5 @@
 require 'listen'
+require 'pathname'
 
 # Listens to directory changes and executes callback each time something changes
 class Listener
@@ -22,6 +23,7 @@ class Listener
     }
 
     @base = base
+    @base_pathname = Pathname.new(@base)
     settings = defaults.merge(settings)
 
     @tracked_locations = settings[:tracked_locations]
@@ -35,7 +37,7 @@ class Listener
     locations = tracked_locations.map { |tl| File.expand_path(tl, @base) }
 
     @listener =
-      Listen.to(locations, force_polling) do |modified, added, removed|
+      Listen.to(locations, force_polling: force_polling) do |modified, added, removed|
         flags = prepare_flags(modified, added, removed)
         changes = prepare_changes(flags)
         yield changes if block_given?
@@ -54,25 +56,34 @@ class Listener
   def prepare_flags(modified, added, removed)
     flags = Hash.new(0)
 
-    added.each    { |f| flags[f] |= 4 }
-    modified.each { |f| flags[f] |= 2 }
-    removed.each  { |f| flags[f] |= 1 }
+    added.each    { |f| flags[make_relative_path(f)] |= 4 }
+    modified.each { |f| flags[make_relative_path(f)] |= 2 }
+    removed.each  { |f| flags[make_relative_path(f)] |= 1 }
 
     flags
+  end
+
+  def make_relative_path(path)
+    path = Pathname.new(path)
+
+    if path.absolute?
+      path.relative_path_from(@base_pathname).to_s
+    else
+      path.to_s
+    end
   end
 
   def prepare_changes(flags)
     flags.map do |f, flag|
       file = File.expand_path(f, @base)
       next if ignore_matcher.matched?(file)
-      create_tracked_file(flag, file)
+      create_tracked_file(flag, f)
     end.compact
   end
 
   def create_tracked_file(flags, file)
-    state = FLAGS_MAP[flags]
-    return nil unless state == Insup::TrackedFile::UNSURE && !File.exist?(file)
-    Insup::TrackedFile.new(file, state) if state
+    tracked_file = Insup::TrackedFile.new(file, FLAGS_MAP[flags])
+    return tracked_file unless tracked_file.unsure? && !tracked_file.exist?(@base)
   end
 
   def ignore_matcher

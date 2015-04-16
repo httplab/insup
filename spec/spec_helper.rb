@@ -1,4 +1,5 @@
 require 'coveralls'
+require 'rspec/collection_matchers'
 
 Coveralls.wear!
 
