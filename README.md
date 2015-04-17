@@ -33,7 +33,7 @@ Open **.insup** file with your favourite text editor and modify the configuratio
 * [**uploader**](#uploaders) section specifies the uploader to use as well as its configuration. The uploader class is specified by the `class` option.
 * **insales** secion holds information for connecting to Insales shop. To use insales features you should specify `subdomain`, `api_key` and `password` parameters.
 * **log** section sets logging parameters. Use `file` to specify a log file path, `level` to set log level (`unknown`, `debug`, `error`, `fatal`, `info`, `unknown` and `warn`), and `pattern` to specify log message pattern using `%{timestamp}`, `%{level}`, `%{message}`, and `%{backtrace}` substitutions.
-* [**listen**](#listen_mode) section specifies listener options.
+* [**listen**](#listen-mode) section specifies listener options.
 
 #### Trackers
 
@@ -119,13 +119,13 @@ insup <command> --help
 
 ##Troubleshooting
 
-### Mac OsX users
-For a reason yet unknown sometimes on a newer versions of Mac OsX Insup will only listen to changes that take place under the last folder listed in `track` settings.
+### OS X users
+For a reason yet unknown sometimes on a newer versions of OS X Insup will only listen to changes that take place under the last folder listed in `track` settings.
 
 Current workaround is to fall back to filesystem polling by adding the following lines to the configuration:
 
 ```yaml
-options:
+listen:
   force_polling: true
 ```
 
