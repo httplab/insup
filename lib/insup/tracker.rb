@@ -15,16 +15,20 @@ class Insup
       @trackers[tracker_alias.to_sym]
     end
 
-    def initialize(base, config)
+    def self.build(insup)
+      new(insup.working_directory, insup.settings.tracker)
+    end
+
+    def initialize(base, config = {})
       @config = config
-      @path = base
+      @base = base
     end
 
     # Lists all files in the tracked locations whether they are ignored or not
     def all_files
       locations = tracked_locations
       locations.map do |loc|
-        loc_pat = File.join(loc, '**/*')
+        loc_pat = File.join(@base, loc, '**/*')
         Dir.glob(loc_pat, File::FNM_DOTMATCH)
           .select { |e| File.file?(e) }
       end.flatten
@@ -36,8 +40,7 @@ class Insup
       all_files.reject { |f| ignore_matcher.matched?(f) }
     end
 
-    # Lists all tracked files in the tracked locations
-    # i. e. all files but ignored
+    # Lists all ignored files in the tracked locations
     def ignored_files
       all_files.select { |f| ignore_matcher.matched?(f) }
     end
@@ -56,7 +59,7 @@ class Insup
     def raw_changes; end
 
     def ignore_matcher
-      @ignore_matcher ||= ::MatchFiles.git(@path, ignore_patterns)
+      @ignore_matcher ||= ::MatchFiles.git(@base, ignore_patterns)
     end
 
     def tracked_locations
