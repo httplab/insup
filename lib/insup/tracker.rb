@@ -1,4 +1,6 @@
 require 'match_files'
+require 'pathname'
+
 class Insup
   # Base class for all trackers
   class Tracker
@@ -8,7 +10,7 @@ class Insup
       end
 
       @trackers ||= {}
-      @trackers[tracker_alias] = self
+      @trackers[tracker_alias] = tracker_class
     end
 
     def self.find_tracker(tracker_alias)
@@ -22,36 +24,30 @@ class Insup
     def initialize(base, config = {})
       @config = config
       @base = base
+      @base_pathname = Pathname.new(@base)
     end
 
-    # Lists all files in the tracked locations whether they are ignored or not
+    # Lists all files in the working directory whether they are ignored or not
     def all_files
-      locations = tracked_locations
-      locations.map do |loc|
-        loc_pat = File.join(@base, loc, '**/*')
-        Dir.glob(loc_pat, File::FNM_DOTMATCH)
-          .select { |e| File.file?(e) }
-      end.flatten
+      loc_pat = File.join(@base, '**/*')
+      Dir.glob(loc_pat, File::FNM_DOTMATCH)
+        .select { |e| File.file?(e) }
+        .map { |f| f[@base.size + 1..-1] }
     end
 
-    # Lists all tracked files in the tracked locations
+    # Lists all tracked files in the working directory
     # i. e. all files but ignored
     def tracked_files
       all_files.reject { |f| ignore_matcher.matched?(f) }
     end
 
-    # Lists all ignored files in the tracked locations
+    # Lists all ignored files in the working directory
     def ignored_files
       all_files.select { |f| ignore_matcher.matched?(f) }
     end
 
     def changes
-      raw_changes.select do |x|
-        tracked_locations.any? do |loc|
-          !ignore_matcher.matched?(x.path) &&
-            File.fnmatch(File.join(loc, '/*'), x.path)
-        end
-      end
+      raw_changes.reject { |x| ignore_matcher.matched?(x.path) }
     end
 
     protected
@@ -60,10 +56,6 @@ class Insup
 
     def ignore_matcher
       @ignore_matcher ||= ::MatchFiles.git(@base, ignore_patterns)
-    end
-
-    def tracked_locations
-      @track = @config.tracked_locations
     end
 
     def ignore_patterns

@@ -1,10 +1,6 @@
 describe Insup::Settings do
   subject { described_class.new('spec/support/.insup') }
 
-  it 'has correct tracked locations' do
-    expect(%w(media templates snippets) - subject.tracked_locations).to be_empty
-  end
-
   it 'has correct tracker' do
     expect(subject.tracker['class']).to eq('Insup::Tracker::GitTracker')
   end

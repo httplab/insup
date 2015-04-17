@@ -60,14 +60,7 @@ command :config do |c|
   end
 end
 
-desc 'Show tracked locations'
-command 'list-locations' do |c|
-  c.action do
-    Insup::Console.list_locations
-  end
-end
-
-desc 'List files under tracked locations'
+desc 'List files'
 command 'list-files' do |c|
   c.switch [:a, :all],
            desc: I18n.t('app.command.list_files.switches.all.desc'),

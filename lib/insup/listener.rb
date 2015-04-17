@@ -3,7 +3,7 @@ require 'pathname'
 
 # Listens to directory changes and executes callback each time something changes
 class Listener
-  attr_reader :tracked_locations, :ignore_patterns, :force_polling
+  attr_reader :ignore_patterns, :force_polling
 
   FLAGS_MAP = {
     1 => Insup::TrackedFile::DELETED,
@@ -18,30 +18,22 @@ class Listener
   def initialize(base, settings = {})
     defaults = {
       force_polling: false,
-      ignore_patterns: [],
-      tracked_locations: []
+      ignore_patterns: []
     }
 
     @base = base
     @base_pathname = Pathname.new(@base)
     settings = defaults.merge(settings)
-
-    @tracked_locations = settings[:tracked_locations]
     @ignore_patterns = settings[:ignore_patterns]
-
-    settings.delete(:tracked_locations)
     settings.delete(:ignore_patterns)
-
     @listener_options = settings
   end
 
   def listen
     return if @listener
 
-    locations = tracked_locations.map { |tl| File.expand_path(tl, @base) }
-
     @listener =
-      Listen.to(locations, @listener_options) do |modified, added, removed|
+      Listen.to(@base, @listener_options) do |modified, added, removed|
         flags = prepare_flags(modified, added, removed)
         changes = prepare_changes(flags)
         yield changes if block_given?

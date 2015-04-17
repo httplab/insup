@@ -26,10 +26,6 @@ class Insup
     FileUtils.cp(template_file, path)
   end
 
-  def tracked_locations
-    @settings.tracked_locations
-  end
-
   def working_dir
     @settings.working_directory
   end

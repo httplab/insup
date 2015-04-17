@@ -1,13 +1,8 @@
 describe Insup::Listener do
   let(:base) { Dir.mktmpdir }
-  let(:tracked_dir) do
-    fname = File.join(base, 'tracked_dir')
-    Dir.mkdir(fname)
-    fname
-  end
 
   subject(:subject) do
-    described_class.new(base, tracked_locations: ['tracked_dir'])
+    described_class.new(base)
   end
 
   describe '#prepare_flags' do
@@ -69,7 +64,6 @@ describe Insup::Listener do
     let(:delay) { 0.2 }
 
     before(:each) do
-      tracked_dir
       subject.listen { |changes| handler.handle(changes) }
     end
 
@@ -80,7 +74,7 @@ describe Insup::Listener do
     it 'listens to file changes' do
       expect(handler).to receive(:handle)
 
-      fname = File.join(tracked_dir, 'a')
+      fname = File.join(base, 'a')
       File.write(fname, '')
       sleep(delay)
 
@@ -89,6 +83,7 @@ describe Insup::Listener do
       open(fname, 'a') do |f|
         f << "some changes...\n"
       end
+
       sleep(delay)
 
       expect(handler).to receive(:handle)
@@ -105,13 +100,11 @@ describe Insup::Listener do
     subject(:subject) do
       described_class.new(
         base,
-        tracked_locations: ['tracked_dir'],
         force_polling: true
       )
     end
 
     before(:each) do
-      tracked_dir
       subject.listen { |changes| handler.handle(changes) }
     end
 
@@ -122,7 +115,7 @@ describe Insup::Listener do
     it 'listens to file changes' do
       expect(handler).to receive(:handle)
 
-      fname = File.join(tracked_dir, 'a')
+      fname = File.join(base, 'a')
       File.write(fname, '')
       sleep(delay)
 

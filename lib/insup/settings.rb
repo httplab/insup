@@ -16,7 +16,6 @@ class Insup
 
     def listener_settings
       {
-        tracked_locations: tracked_locations,
         ignore_patterns: ignore_patterns,
         wait_for_delay: settings['listen']['wait_for_delay'],
         latency: settings['listen']['latency'],
@@ -34,10 +33,6 @@ class Insup
       else
         Dir.getwd
       end
-    end
-
-    def tracked_locations
-      settings['track'] || []
     end
 
     def uploader

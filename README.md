@@ -27,13 +27,13 @@ Open **.insup** file with your favourite text editor and modify the configuratio
 ### Configuration
 **.insup** file is a YAML file. Here's a list of the configuration options.
 
-* **track** section is an array of directories which you want to track for changes. Specify locations relative to the working directory
+* **working_dir** specifies working directory (relative to the directory containing .insup file). Defaults to the current directory.
 * **ignore** section specifies an array of patterns that are used to ignore files. Files that match ignore patterns will be neither tracked nor uploaded. The patterns must be specified in Git ignore format relative to the working directory.
 * [**tracker**](#trackers) section specifies the tracker to use as well as its configuration. The tracker class is specified by the `class` option.
 * [**uploader**](#uploaders) section specifies the uploader to use as well as its configuration. The uploader class is specified by the `class` option.
 * **insales** secion holds information for connecting to Insales shop. To use insales features you should specify `subdomain`, `api_key` and `password` parameters.
 * **log** section sets logging parameters. Use `file` to specify a log file path, `level` to set log level (`unknown`, `debug`, `error`, `fatal`, `info`, `unknown` and `warn`), and `pattern` to specify log message pattern using `%{timestamp}`, `%{level}`, `%{message}`, and `%{backtrace}` substitutions.
-* **options** section specifies miscellaneous options. Currently only [force_polling](#mac-osx-users) option is implemented.
+* [**listen**](#listen_mode) section specifies listener options.
 
 #### Trackers
 
@@ -54,7 +54,7 @@ Currently there are two uploaders available:
 
 #### Listen mode
 
-In this mode Insup will continuously listen to the changes in tracked locations and upload the changes immidiately. It will use the specified uploader, but the tracker is ignored. Listen mode will only watch files that do not match ignore patterns.
+In this mode Insup will continuously listen to the changes in working directory and upload the changes immidiately. It will use the specified uploader, but the tracker is ignored. Listen mode will only watch files that do not match ignore patterns.
 
 Activate listen mode by typing
 ```bash
@@ -66,6 +66,10 @@ insup
 ```
 in your working directory.
 
+Listen mode options are specified in **listen** section:
+* **force_polling:** force the use of polling when listening to changes (true or false);
+* **latency:** delay in seconds between checking for changes;
+* **wait_for_delay:** delay in seconds between processing changes when there are any.
 
 #### Track mode
 In this mode you can periodically check for changes and upload changed files to the remote storage. Tracker specified in the .insup file is used to detect changes.
@@ -97,7 +101,7 @@ insup insales download [-f] [-t theme-id]
 ```
 Specify `-f` flag to overwrite any existing file. If no theme ID is specified Insup will download theme specified in the .insup file.
 
-List files under tracked locations:
+List files in tracked directory:
 ```bash
 insup list-files [--all|--ignored]
 ```
@@ -128,7 +132,7 @@ options:
 Filesystem polling may increase the CPU usage and decrease performance. Use this only if Insup doesn't work otherwise.
 
 ### Windows users
-There was an issue report from Windows users concerning wrong file encoding upon uploading UTF-8 files to Insales. If you are experiencing encoding problems when running Insup on Windows, please use the following workaround until the problem is investigated and solved. 
+There was an issue report from Windows users concerning wrong file encoding upon uploading UTF-8 files to Insales. If you are experiencing encoding problems when running Insup on Windows, please use the following workaround until the problem is investigated and solved.
 
 Before running any `insup` command exectute the following:
 ```bash

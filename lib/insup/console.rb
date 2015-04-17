@@ -52,10 +52,6 @@ class Insup
       Insup.create_insup_file(directory)
     end
 
-    def self.list_locations
-      @insup.tracked_locations.each { |loc| puts loc }
-    end
-
     def self.list_files(options = {})
       @insup.files(options).each { |f| puts f }
     end
@@ -109,12 +105,10 @@ class Insup
     def self.print_config
       puts "Tracker: #{@settings.tracker['class']}"
       puts "Uploader: #{@settings.uploader['class']}"
-      puts 'Tracked locations:'
-      puts @settings.tracked_locations.map { |loc| "\t#{loc}" }
-      puts 'Ignore patterns:'
-      puts @settings.ignore_patterns.map { |ip| "\t#{ip}" }
       puts 'Working directory:'
       puts @insup.working_dir
+      puts 'Ignore patterns:'
+      puts @settings.ignore_patterns.map { |ip| "\t#{ip}" }
     end
 
     def self.listen

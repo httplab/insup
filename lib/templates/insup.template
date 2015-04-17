@@ -1,13 +1,6 @@
 # Working directory. Defaults to the current directory
 # working_dir: build
 
-# Tracked locations. List all subdirectories of the working directory you want Insup to track
-track:
-  - media
-  - snippets
-  - templates
-  - configuration
-
 # Tracker settings
 #   class: tracker class. Use 'git' or 'simple'
 tracker:
@@ -30,8 +23,9 @@ uploader:
   theme_id:
 
 # Ignore patterns
-# Insup ignore patterns follow the same rules as Git ignore. Remember that the patterns
-# are considered to be relative to the working directory, not to the tracked locations.
+# Insup ignore patterns follow the same rules as Git ignore.
+# Remember that the patterns are considered to be
+# relative to the working directory.
 ignore:
   - '*.swp'
   - '*.swx'
