@@ -73,19 +73,24 @@ class Insup
       theme_id ||= @settings.uploader['theme_id']
       puts "Downloading theme #{theme_id}"
 
-      @insup.insales.download_theme(theme_id, @settings.working_directory) do |asset, exists|
-        if exists && !force
-          puts "#{asset.path} already exists"
-          false
-        else
-          if exists
-            puts "Overwriting #{asset.path}"
+      @insup
+        .insales
+        .download_theme(
+          theme_id,
+          @settings.working_directory
+        ) do |asset, exists|
+          if exists && !force
+            puts "#{asset.path} already exists"
+            false
           else
-            puts "Downloading #{asset.path}"
+            if exists
+              puts "Overwriting #{asset.path}"
+            else
+              puts "Downloading #{asset.path}"
+            end
+            true
           end
-          true
         end
-      end
     end
 
     def self.status
@@ -141,7 +146,7 @@ class Insup
       begin
         @logger.error(exception) if @logger
       rescue
-        $stderr.puts 'Unable to log error because the logger is not properly configured'
+        $stderr.puts I18n.t('app.errors.no_logger')
       end
     end
   end

@@ -87,7 +87,8 @@ class Listener
 
   def create_tracked_file(flags, file)
     tracked_file = Insup::TrackedFile.new(file, FLAGS_MAP[flags])
-    return tracked_file unless tracked_file.unsure? && !tracked_file.exist?(@base)
+    return nil if tracked_file.unsure? && !tracked_file.exist?(@base)
+    tracked_file
   end
 
   def ignore_matcher

@@ -14,7 +14,8 @@ class Insup
       @path = path
 
       if Pathname.new(path).absolute?
-        fail Insup::Exceptions::InsupError, "Path must be relative. #{path} given."
+        fail Insup::Exceptions::InsupError,
+             "Path must be relative. #{path} given."
       end
 
       @state = state
@@ -25,10 +26,12 @@ class Insup
       File.basename(@path)
     end
 
-    # Given the absolute path of a base directory, returns the absolute path of the file.
+    # Given the absolute path of a base directory,
+    # returns the absolute path of the file.
     def absolute_path(base)
       unless Pathname.new(base).absolute?
-        fail Insup::Exceptions::InsupError, 'Base path must be absolute. #{base} given.'
+        fail Insup::Exceptions::InsupError,
+             'Base path must be absolute. #{base} given.'
       end
 
       File.expand_path(@path, base)

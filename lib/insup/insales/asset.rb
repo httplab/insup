@@ -27,7 +27,9 @@ class Insup
       end
 
       def image?
-        content_type =~ /image/ || content_type =~ /octet-stream/ || content_type =~ /flash/
+        content_type =~ /image/ ||
+          content_type =~ /octet-stream/ ||
+          content_type =~ /flash/
       end
 
       def self.get_type(path)

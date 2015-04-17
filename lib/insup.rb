@@ -51,7 +51,13 @@ class Insup
         changes
       else
         files.map do |file|
-          mode = File.exist?(file) ? TrackedFile::MODIFIED : TrackedFile::DELETED
+          mode =
+            if File.exist?(file)
+              TrackedFile::MODIFIED
+            else
+              TrackedFile::DELETED
+            end
+
           TrackedFile.new(file, mode)
         end
       end

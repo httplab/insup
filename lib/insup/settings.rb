@@ -29,7 +29,11 @@ class Insup
     end
 
     def working_directory
-      settings['working_dir'] ? File.expand_path(settings['working_dir']) : Dir.getwd
+      if settings['working_dir']
+        File.expand_path(settings['working_dir'])
+      else
+        Dir.getwd
+      end
     end
 
     def tracked_locations

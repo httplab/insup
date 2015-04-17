@@ -4,7 +4,8 @@ describe Insup::TrackedFile do
   end
 
   it 'fails if absolute path given' do
-    expect { described_class.new('/a/b/c') }.to raise_error(Insup::Exceptions::InsupError)
+    expect { described_class.new('/a/b/c') }
+      .to raise_error(Insup::Exceptions::InsupError)
   end
 
   describe '#file_name' do
@@ -19,20 +20,21 @@ describe Insup::TrackedFile do
 
   describe '#absolute_path' do
     subject(:subject) { described_class.new('characters/romeo.rb') }
+    let(:romeo) { '/home/shakespeare/projets/hamlet/characters/romeo.rb' }
 
     it 'works with regular paths' do
       base = '/home/shakespeare/projets/hamlet'
-      expect(subject.absolute_path(base)).to eq('/home/shakespeare/projets/hamlet/characters/romeo.rb')
+      expect(subject.absolute_path(base)).to eq(romeo)
     end
 
     it 'works with double dotted paths' do
       base = '/home/shakespeare/projets/hamlet/../hamlet'
-      expect(subject.absolute_path(base)).to eq('/home/shakespeare/projets/hamlet/characters/romeo.rb')
+      expect(subject.absolute_path(base)).to eq(romeo)
     end
 
     it 'works with single dotted paths' do
       base = '/home/shakespeare/projets/./hamlet/.'
-      expect(subject.absolute_path(base)).to eq('/home/shakespeare/projets/hamlet/characters/romeo.rb')
+      expect(subject.absolute_path(base)).to eq(romeo)
     end
 
     it 'fails if base path is not absolute' do

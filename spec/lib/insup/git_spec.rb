@@ -5,6 +5,7 @@ describe Insup::Git do
 
   it 'fails if not a git repository' do
     dir = Dir.mktmpdir('insup_specs')
-    expect { described_class.new(dir) }.to raise_error(Insup::Exceptions::NotAGitRepositoryError)
+    expect { described_class.new(dir) }
+      .to raise_error(Insup::Exceptions::NotAGitRepositoryError)
   end
 end

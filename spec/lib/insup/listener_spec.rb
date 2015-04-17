@@ -5,7 +5,10 @@ describe Insup::Listener do
     Dir.mkdir(fname)
     fname
   end
-  subject(:subject) { described_class.new(base, tracked_locations: ['tracked_dir']) }
+
+  subject(:subject) do
+    described_class.new(base, tracked_locations: ['tracked_dir'])
+  end
 
   describe '#prepare_flags' do
     it 'works correctly' do
@@ -54,8 +57,10 @@ describe Insup::Listener do
 
     it 'returns unsure if file exists' do
       File.write(File.join(base, 'unsure1'), 'Hi')
-      expect(subject.send(:prepare_changes, 'unsure1' => 5)).to have_exactly(1).item
-      expect(subject.send(:prepare_changes, 'unsure1' => 7)).to have_exactly(1).item
+      expect(subject.send(:prepare_changes, 'unsure1' => 5))
+        .to have_exactly(1).item
+      expect(subject.send(:prepare_changes, 'unsure1' => 7))
+        .to have_exactly(1).item
     end
   end
 

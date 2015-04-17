@@ -11,7 +11,8 @@ require_relative '../lib/insup/locale_parser'
 I18n::Backend::Simple.send(:include, I18n::Backend::Fallbacks)
 include GLI::App
 
-I18n.load_path = Dir.glob(File.expand_path('../../lib/translations/*.yml', __FILE__))
+I18n.load_path =
+  Dir.glob(File.expand_path('../../lib/translations/*.yml', __FILE__))
 I18n.backend.load_translations
 I18n.enforce_available_locales = false
 I18n.config.locale = Insup::LocaleParser.locale
@@ -45,7 +46,7 @@ command :init do |c|
   end
 end
 
-desc 'Show current status of working directory according to the selected tracker'
+desc I18n.t('app.command.status.desc')
 command :status do |c|
   c.action do
     Insup::Console.status
@@ -68,7 +69,9 @@ end
 
 desc 'List files under tracked locations'
 command 'list-files' do |c|
-  c.switch [:a, :all], desc: 'List all files, including ignored ones', negatable: false
+  c.switch [:a, :all],
+           desc: I18n.t('app.command.list_files.switches.all.desc'),
+           negatable: false
   c.switch [:i, :ignored], desc: 'List only ignored files', negatable: false
 
   c.action do |_, options|

@@ -18,7 +18,10 @@ class Insup
     attr_reader :base
 
     def self.register_uploader(uploader_alias, uploader_class = self)
-      return superclass.register_uploader(uploader_alias, uploader_class) if self != Uploader
+      unless self == Uploader
+        return superclass.register_uploader(uploader_alias, uploader_class)
+      end
+
       @uploaders ||= {}
       @uploaders[uploader_alias] = uploader_class
     end
@@ -33,7 +36,8 @@ class Insup
 
     def initialize(base, _settings = {})
       unless Pathname.new(base).absolute?
-        fail Insup::Exceptions::InsupError, "Uploader base requires absolute base path. #{base} given."
+        fail Insup::Exceptions::InsupError,
+             "Uploader base requires absolute base path. #{base} given."
       end
 
       @base = base

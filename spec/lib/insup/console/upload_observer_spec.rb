@@ -16,7 +16,8 @@ describe Insup::Console::UploadObserver do
       ]
 
     events.each do |event|
-      expect { @observer.update(event, Insup::TrackedFile.new('path/to.file')) }.not_to raise_error
+      expect { @observer.update(event, Insup::TrackedFile.new('path/to.file')) }
+        .not_to raise_error
     end
   end
 end

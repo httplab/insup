@@ -4,6 +4,15 @@ en:
     global_params:
       verbose: Be verbose
       debug: Dump debug information upon error
+    errors:
+       no_logger: Unable to log error because the logger is not properly configured
+    command:
+      status:
+        desc: Show current status of working directory according to the selected tracker
+      list_files:
+        switches:
+          all:
+            desc: List all files, including ignored ones
   insup:
     log:
       starting_listener: Starting listener

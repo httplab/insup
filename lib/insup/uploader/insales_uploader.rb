@@ -17,7 +17,8 @@ class Insup
         @config = settings
 
         unless theme
-          fail Insup::Exceptions::FatalUploaderError, "Theme #{theme_id} is not found in the Insales shop"
+          fail Insup::Exceptions::FatalUploaderError,
+               "Theme #{theme_id} is not found in the Insales shop"
         end
 
         assets_list(true)
@@ -41,7 +42,10 @@ class Insup
         changed
         notify_observers(CREATING_FILE, file)
         asset_type = ::Insup::Insales::Asset.get_type(file.path)
-        notify_and_fail("Cannot determine asset type for file #{file.path}", file) unless asset_type
+        notify_and_fail(
+          "Cannot determine asset type for file #{file.path}",
+          file
+        ) unless asset_type
 
         file_contents = File.read(file.path)
 
@@ -63,7 +67,9 @@ class Insup
           changed
           notify_observers(CREATED_FILE, file)
         rescue ActiveResource::ServerError
-          notify_and_fail("Server error occured when creating file #{file.path}", file)
+          notify_and_fail(
+            "Server error occured when creating file #{file.path}",
+            file)
         end
       end
 
@@ -82,7 +88,9 @@ class Insup
             changed
             notify_observers(MODIFIED_FILE, file)
           rescue ActiveResource::ServerError
-            notify_and_fail("Server error occured when updating file #{file.path}", file)
+            notify_and_fail(
+              "Server error occured when updating file #{file.path}",
+              file)
           end
         else
           remove_file(file)
@@ -104,13 +112,18 @@ class Insup
         rescue ActiveResource::ServerError => ex
           changed
           notify_observers(ERROR, file, ex.message)
-          raise Insup::Exceptions::RecoverableUploaderError, "Server error occured when deleting file #{file.path}"
+          raise Insup::Exceptions::RecoverableUploaderError,
+                "Server error occured when deleting file #{file.path}"
         end
       end
 
       private
 
-      def notify_and_fail(msg, file, exception_class = Insup::Exceptions::RecoverableUploaderError)
+      def notify_and_fail(
+        msg,
+        file,
+        exception_class = Insup::Exceptions::RecoverableUploaderError
+      )
         changed
         notify_observers(ERROR, file, msg)
         fail exception_class, msg
@@ -138,7 +151,9 @@ class Insup
 
       def find_asset(file)
         asset_type = ::Insup::Insales::Asset.get_type(file.path)
-        notify_and_fail("Cannot determine asset type for file #{file.path}", file) unless asset_type
+        notify_and_fail(
+          "Cannot determine asset type for file #{file.path}",
+          file) unless asset_type
 
         files = assets_list.select do |el|
           el.type == asset_type && el.filename == file.file_name
@@ -149,7 +164,9 @@ class Insup
 
       def find_asset!(file)
         asset = find_asset(file)
-        notify_and_fail("Cannot find remote counterpart for file #{file.path}", file) unless asset
+        notify_and_fail(
+          "Cannot find remote counterpart for file #{file.path}",
+          file) unless asset
         asset
       end
 

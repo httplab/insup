@@ -18,7 +18,10 @@ class Insup
 
       Dir.chdir(@base) do
         Dir.glob('**/*', File::FNM_DOTMATCH) do |file|
-          next if files[file] || File.directory?(file) || ignore.include?(file) || file =~ %r{^.git\/.+}
+          next if files[file] ||
+                  File.directory?(file) ||
+                  ignore.include?(file) ||
+                  file =~ %r{^.git\/.+}
           files[file] = { path: file, untracked: true }
         end
       end
