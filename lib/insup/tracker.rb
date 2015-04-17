@@ -3,8 +3,7 @@ class Insup
   # Base class for all trackers
   class Tracker
     def self.register_tracker(tracker_alias, tracker_class = self)
-      superclass.register_tracker(tracker_alias, tracker_class) if self != Tracker
-
+      return superclass.register_tracker(tracker_alias, tracker_class) if self != Tracker
       @trackers ||= {}
       @trackers[tracker_alias] = self
     end

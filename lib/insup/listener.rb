@@ -29,9 +29,8 @@ class Listener
     @tracked_locations = settings[:tracked_locations]
     @ignore_patterns = settings[:ignore_patterns]
 
-    settings
-      .delete(:tracked_locations)
-      .delete(:ignore_patterns)
+    settings.delete(:tracked_locations)
+    settings.delete(:ignore_patterns)
 
     @listener_options = settings
   end

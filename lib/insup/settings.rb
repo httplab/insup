@@ -21,7 +21,11 @@ class Insup
         wait_for_delay: settings['listen']['wait_for_delay'],
         latency: settings['listen']['latency'],
         force_polling: settings['listen']['latency']
-      }
+      }.delete_if { |_, v| v.blank? }
+    end
+
+    def [](arg)
+      settings[arg]
     end
 
     def working_directory

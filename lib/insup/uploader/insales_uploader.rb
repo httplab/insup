@@ -6,10 +6,15 @@ class Insup
     class InsalesUploader < Insup::Uploader
       register_uploader :insales
 
-      def initialize(base, settings = {})
-        super
-        @insales = Insup::Insales.new(settings)
+      def self.build(insup)
+        new(insup.working_directory, insup.insales, insup.settings.uploader)
+      end
+
+      def initialize(base, insales, settings = {})
+        super(base, settings)
+        @insales = insales
         @insales.configure_api
+        @config = settings
 
         unless theme
           fail Insup::Exceptions::FatalUploaderError, "Theme #{theme_id} is not found in the Insales shop"

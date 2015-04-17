@@ -6,7 +6,7 @@ require 'i18n/backend/fallbacks'
 
 require_relative '../lib/insup/version'
 require_relative '../lib/insup/console'
-require_relative '../lib/locale_parser'
+require_relative '../lib/insup/locale_parser'
 
 I18n::Backend::Simple.send(:include, I18n::Backend::Fallbacks)
 include GLI::App
@@ -14,7 +14,7 @@ include GLI::App
 I18n.load_path = Dir.glob(File.expand_path('../../lib/translations/*.yml', __FILE__))
 I18n.backend.load_translations
 I18n.enforce_available_locales = false
-I18n.config.locale = LocaleParser.locale
+I18n.config.locale = Insup::LocaleParser.locale
 
 program_desc I18n.t('app.name')
 version Insup::VERSION

@@ -2,13 +2,14 @@ require 'fileutils'
 
 # Main class for Insup. Encapsulates all essential insup abilities.
 class Insup
-  def self.logger=(val)
-    @logger = val
-    Insup::Insales.logger = @logger
+  attr_reader :settings
+
+  class << self
+    attr_accessor :logger
   end
 
-  def self.logger
-    @logger
+  def logger
+    self.class.logger
   end
 
   def initialize(settings)
@@ -44,18 +45,13 @@ class Insup
     end
   end
 
-  def get_file_path(file)
-    File.expand_path(file, @base)
-  end
-
   def commit(files = nil)
     list =
       if files.nil? || files.empty?
         changes
       else
         files.map do |file|
-          f = get_file_path(file)
-          mode = File.exist?(f) ? TrackedFile::MODIFIED : TrackedFile::DELETED
+          mode = File.exist?(file) ? TrackedFile::MODIFIED : TrackedFile::DELETED
           TrackedFile.new(file, mode)
         end
       end
@@ -68,9 +64,9 @@ class Insup
       if @settings.uploader
         klass = Insup::Uploader.find_uploader(@settings.uploader['class']) ||
                 Object.const_get(@settings.uploader['class'])
-        klass.new(@settings)
+        klass.build(self)
       else
-        Uploader::DummyUploader.new(@settings)
+        Uploader::DummyUploader.build(self)
       end
   end
 
@@ -86,7 +82,7 @@ class Insup
   end
 
   def insales
-    @insales ||= Insales.new(@settings)
+    @insales ||= Insales.new(@settings.insales)
   end
 
   def changes
@@ -96,27 +92,29 @@ class Insup
   def listen
     @listener = Listener.new(@base, @settings.listener_settings)
 
+    logger.info(I18n.t('insup.log.starting_listener'))
+
     @listener.listen do |changes|
       begin
-        changes.each do |change|
-          uploader.process_file(change)
-        end
+        changes.each { |change| uploader.process_file(change) }
       rescue Exceptions::RecoverableUploaderError => ex
         logger.error(ex)
       end
     end
+
+    logger.info(I18n.t('insup.log.listener_started'))
   end
 
   def stop_listening
+    logger.info(I18n.t('insup.log.stopping_listener'))
     @listener.stop
+    logger.info(I18n.t('insup.log.listener_stopped'))
   end
 
   protected
 
   def process_all_files(files)
-    files.each do |file|
-      uploader.process_file(file)
-    end
+    files.each { |file| uploader.process_file(file) }
   end
 end
 

@@ -59,7 +59,7 @@ describe Insup::Listener do
     end
   end
 
-  context 'listen' do
+  context 'listen', listen: true do
     let(:handler) { Object.new }
     let(:delay) { 0.2 }
 
@@ -93,7 +93,7 @@ describe Insup::Listener do
     end
   end
 
-  context 'polling' do
+  context 'polling', listen: true do
     let(:handler) { Object.new }
     let(:delay) { 1 }
 

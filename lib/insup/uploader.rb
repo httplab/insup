@@ -18,13 +18,17 @@ class Insup
     attr_reader :base
 
     def self.register_uploader(uploader_alias, uploader_class = self)
-      superclass.register_uploader(uploader_alias, uploader_class) if self != Uploader
+      return superclass.register_uploader(uploader_alias, uploader_class) if self != Uploader
       @uploaders ||= {}
       @uploaders[uploader_alias] = uploader_class
     end
 
     def self.find_uploader(uploader_alias)
       @uploaders[uploader_alias.to_sym]
+    end
+
+    def self.build(insup)
+      new(insup.settings.working_directory, insup.settings.uploader)
     end
 
     def initialize(base, _settings = {})

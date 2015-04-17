@@ -4,3 +4,9 @@ en:
     global_params:
       verbose: Be verbose
       debug: Dump debug information upon error
+  insup:
+    log:
+      starting_listener: Starting listener
+      listener_started: Listener started
+      stopping_listener: Stopping listener
+      listener_stopped: Listener stopped

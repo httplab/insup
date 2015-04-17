@@ -1,4 +1,4 @@
-describe LocaleParser do
+describe Insup::LocaleParser do
   it 'works correctly' do
     samples = {
       'en' => 'en',
@@ -12,7 +12,7 @@ describe LocaleParser do
     }
 
     samples.each do |k, v|
-      expect(LocaleParser.locale(k)).to eq(v)
+      expect(described_class.locale(k)).to eq(v)
     end
   end
 end

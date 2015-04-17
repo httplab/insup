@@ -44,6 +44,7 @@ class Insup
       end
 
       Insup.logger = @logger
+      ActiveResource::Base.logger = @logger
     end
 
     def self.init(directory = nil)
@@ -52,19 +53,16 @@ class Insup
     end
 
     def self.list_locations
-      @insup.tracked_locations.each do |loc|
-        puts loc
-      end
+      @insup.tracked_locations.each { |loc| puts loc }
     end
 
     def self.list_files(options = {})
-      @insup.files(options).each do |f|
-        puts f
-      end
+      @insup.files(options).each { |f| puts f }
     end
 
     def self.insales_list_themes
       theme_id = @settings.uploader['theme_id']
+
       @insup.insales.themes.each do |theme|
         prefix = theme.id == theme_id ? '=>' : '  '
         puts "#{prefix} #{theme.id}\t#{theme.title}"

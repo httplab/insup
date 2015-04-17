@@ -3,30 +3,22 @@ require 'json'
 
 class Insup
   class Insales
-    def initialize(settings)
-      @settings = settings
-    end
+    attr_reader :config
 
-    def self.logger=(val)
-      ActiveResource::Base.logger = val
-    end
-
-    def self.logger
-      ActiveResource::Base.logger
+    def initialize(settings = {})
+      @config = settings
     end
 
     def configure_api
       return if @has_api
-      @has_api = ::Insup::Insales::Base.configure(config['api_key'], config['subdomain'], config['password'])
+      @has_api =
+        ::Insup::Insales::Base
+        .configure(config['api_key'], config['subdomain'], config['password'])
     end
 
     def themes
       configure_api
       Theme.all
-    end
-
-    def config
-      @settings.insales
     end
 
     def download_theme(theme_id, dir)
